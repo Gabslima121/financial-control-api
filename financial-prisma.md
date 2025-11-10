@@ -1,0 +1,147 @@
+// ============================================
+// PERSONAL FINANCIAL CONTROL SYSTEM
+// Prisma Schema
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum TransactionType {
+  income
+  expense
+}
+
+enum PaymentMethod {
+  credit_card
+  debit_card
+  pix
+  nupay
+  cash
+  bank_transfer
+}
+
+enum TransactionStatus {
+  pending
+  paid
+  cancelled
+}
+
+// ============================================
+// MODELS
+// ============================================
+
+model User {
+  userId       String   @id @default(uuid()) @map("user_id") @db.Uuid
+  userName     String   @map("user_name") @db.VarChar(255)
+  userDocument String   @unique @map("user_document") @db.VarChar(14)
+  email        String   @unique @db.VarChar(255)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  isActive     Boolean  @default(true) @map("is_active")
+
+  // Relations
+  categories          Category[]
+  paymentDestinations PaymentDestination[]
+  transactions        Transaction[]
+  accountBalances     AccountBalance[]
+
+  @@index([email])
+  @@index([userDocument])
+  @@map("users")
+}
+
+model Category {
+  categoryId   String          @id @default(uuid()) @map("category_id") @db.Uuid
+  userId       String          @map("user_id") @db.Uuid
+  categoryName String          @map("category_name") @db.VarChar(100)
+  categoryType TransactionType @map("category_type")
+  description  String?         @db.Text
+  color        String?         @db.VarChar(7) // Hex color (#RRGGBB)
+  createdAt    DateTime        @default(now()) @map("created_at")
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@unique([userId, categoryName, categoryType])
+  @@index([userId])
+  @@map("categories")
+}
+
+model PaymentDestination {
+  destinationId   String   @id @default(uuid()) @map("destination_id") @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  companyName     String   @map("company_name") @db.VarChar(255)
+  companyDocument String?  @map("company_document") @db.VarChar(14)
+  description     String?  @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@unique([userId, companyDocument])
+  @@index([userId])
+  @@map("payment_destinations")
+}
+
+model Transaction {
+  transactionId       String            @id @default(uuid()) @map("transaction_id") @db.Uuid
+  userId              String            @map("user_id") @db.Uuid
+  categoryId          String?           @map("category_id") @db.Uuid
+  destinationId       String?           @map("destination_id") @db.Uuid
+  transactionType     TransactionType   @map("transaction_type")
+  amount              Decimal           @db.Decimal(15, 2)
+  paymentMethod       PaymentMethod     @map("payment_method")
+  installments        Int               @default(1)
+  currentInstallment  Int               @default(1) @map("current_installment")
+  parentTransactionId String?           @map("parent_transaction_id") @db.Uuid
+  description         String?           @db.Text
+  transactionStatus   TransactionStatus @default(pending) @map("transaction_status")
+  transactionDate     DateTime          @map("transaction_date") @db.Date
+  dueDate             DateTime?         @map("due_date") @db.Date
+  paymentDate         DateTime?         @map("payment_date")
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  user              User                @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  category          Category?           @relation(fields: [categoryId], references: [categoryId], onDelete: SetNull)
+  destination       PaymentDestination? @relation(fields: [destinationId], references: [destinationId], onDelete: SetNull)
+  parentTransaction Transaction?        @relation("TransactionInstallments", fields: [parentTransactionId], references: [transactionId], onDelete: Cascade)
+  childTransactions Transaction[]       @relation("TransactionInstallments")
+
+  @@index([userId])
+  @@index([transactionDate])
+  @@index([transactionStatus])
+  @@index([transactionType])
+  @@index([categoryId])
+  @@index([destinationId])
+  @@index([parentTransactionId])
+  @@map("transactions")
+}
+
+model AccountBalance {
+  balanceId   String   @id @default(uuid()) @map("balance_id") @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  balance     Decimal  @default(0) @db.Decimal(15, 2)
+  balanceDate DateTime @default(now()) @map("balance_date")
+  notes       String?  @db.Text
+
+  // Relations
+  user User @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userId, balanceDate(sort: Desc)])
+  @@map("account_balance")
+}
