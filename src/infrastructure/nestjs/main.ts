@@ -11,10 +11,26 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Financial API Control')
     .setVersion('1.0')
+    .addApiKey({
+      type: 'apiKey',
+      name: 'Authorization',
+      description: 'Token de autenticação',
+      in: 'header',
+    }, 'Authorization')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, documentFactory);
+  const document = documentFactory();
+
+  Object.values(document.paths).forEach((path: any) => {
+    Object.values(path).forEach((method: any) => {
+      if (method.security === undefined) {
+        method.security = [{ Authorization: [] }];
+      }
+    });
+  });
+  
+  SwaggerModule.setup('api-docs', app, document);
 
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
