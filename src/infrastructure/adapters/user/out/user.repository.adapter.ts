@@ -20,11 +20,13 @@ export class PrismaUserRepository implements UserPort {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
+
     return user ? UserDomainAdapter.toDomain(user) : null;
   }
 
   async listAllUsers(): Promise<UserDomain[]> {
     const users = await this.prisma.user.findMany();
+
     return users.map(UserDomainAdapter.toDomain);
   }
 }
