@@ -1,12 +1,13 @@
 import { ConflictException } from "@nestjs/common";
 import { UserPort } from "../../core/port/user.port";
 import { UserDomainAdapter } from "../../infrastructure/adapters/user/in/user.domain.adapter";
+import { UserOutput } from "../../infrastructure/adapters/user/out/dto";
 import { UserInput } from "../../infrastructure/nestjs/body-inputs/user/user.input";
 
 export class CreateUserUseCase {
   constructor(private readonly userPort: UserPort) {}
 
-  async execute(userInput: UserInput) {
+  async execute(userInput: UserInput): Promise<UserOutput> {
     const userExists = await this.userPort.listUserByEmail(userInput.email);
 
     if (userExists) {
@@ -20,6 +21,12 @@ export class CreateUserUseCase {
       isActive: true,
     })
 
-    return this.userPort.createUser(domain);
+    const createdUser = await this.userPort.createUser(domain);
+
+    return {
+      name: createdUser.getUserName(),
+      email: createdUser.getEmail(),
+      userDocument: createdUser.getUserDocument().getValue(),
+    }
   }
 }
