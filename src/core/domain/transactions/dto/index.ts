@@ -26,11 +26,11 @@ export interface TransactionDomainDTO {
   transactionType: CategoryTypeEnum;
   amount: number;
   paymentMethod: PaymentMethodEnum;
-  installments?: number; // default 1
-  currentInstallment?: number; // default 1
+  installments?: number;
+  currentInstallment?: number;
   parentTransactionId?: string | null;
   description?: string | null;
-  transactionStatus?: TransactionStatusEnum; // default pending
+  transactionStatus?: TransactionStatusEnum;
   transactionDate: Date;
   dueDate?: Date | null;
   paymentDate?: Date | null;

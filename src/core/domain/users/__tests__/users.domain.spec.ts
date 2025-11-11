@@ -4,7 +4,7 @@ describe('UserDomain', () => {
   const baseParams = {
     userId: '550e8400-e29b-41d4-a716-446655440000',
     userName: 'Alice',
-    userDocument: '12345678000195', // CNPJ válido
+    userDocument: '12345678000195',
     email: 'alice@example.com',
     createdAt: new Date('2024-01-01T00:00:00Z'),
     updatedAt: new Date('2024-01-01T00:00:00Z'),
@@ -23,7 +23,7 @@ describe('UserDomain', () => {
   });
 
   it('deve criar um usuário com CPF quando documento não é CNPJ', () => {
-    const params = { ...baseParams, userDocument: '52998224725' }; // CPF válido
+    const params = { ...baseParams, userDocument: '52998224725' };
     const user = UserDomain.create(params);
     expect(user.getUserDocument().getValue()).toBe('52998224725');
   });
@@ -33,7 +33,6 @@ describe('UserDomain', () => {
     const before = user.getUpdatedAt();
     user.updateEmail('alice.new@example.com');
     expect(user.getEmail()).toBe('alice.new@example.com');
-    // Pode ocorrer no mesmo milissegundo; garante mudança de objeto e tempo não menor
     expect(user.getUpdatedAt()).not.toBe(before);
     expect(user.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(before.getTime());
   });

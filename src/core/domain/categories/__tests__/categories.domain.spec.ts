@@ -57,7 +57,6 @@ describe('CategoriesDomain', () => {
     const generatedId = category.getCategoryId().getValue();
 
     expect(generatedId).not.toBe('');
-    // Verifica formato geral de UUID v4
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     expect(uuidRegex.test(generatedId)).toBe(true);
   });
@@ -66,14 +65,12 @@ describe('CategoriesDomain', () => {
     const params = buildBaseCategoryParams({ isActive: false });
     const category = CategoriesDomain.create(params);
 
-    // ativar
     const beforeActivate = category.getUpdatedAt();
     category.activeCategory();
     expect(category.getIsActive()).toBe(true);
     expect(category.getUpdatedAt()).not.toBe(beforeActivate);
     expect(category.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(beforeActivate.getTime());
 
-    // inativar
     const beforeInactive = category.getUpdatedAt();
     category.inactiveCategory();
     expect(category.getIsActive()).toBe(false);

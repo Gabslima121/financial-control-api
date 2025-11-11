@@ -26,13 +26,11 @@ export class CnpjValueObject extends ValueObject {
     );
   }
 
-  // Valida se o CnpjValueObject é válido
   static isValid(cnpj: string): boolean {
     if (!cnpj || cnpj.length !== 14 || /^[0-9]{14}$/.test(cnpj) === false) {
       return false;
     }
 
-    // CNPJs com números repetidos são inválidos
     const invalids = [
       '00000000000000',
       '11111111111111',
@@ -49,7 +47,6 @@ export class CnpjValueObject extends ValueObject {
       return false;
     }
 
-    // Validação dos dígitos verificadores
     const calcDigit = (base: string): number => {
       const weights =
         base.length === 12
@@ -71,7 +68,6 @@ export class CnpjValueObject extends ValueObject {
     return cnpj === base + firstDigit + secondDigit;
   }
 
-  // Normaliza o CnpjValueObject, removendo separadores
   private static normalize(cnpj: string): string {
     return cnpj.replace(/\D/g, '');
   }
