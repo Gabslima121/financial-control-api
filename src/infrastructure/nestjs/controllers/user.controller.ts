@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserUseCase } from '../../../application/user/create-user.usecase';
 import { UserInput } from '../body-inputs/user/user.input';
-import { AuthenticatedRequest } from '../types/express';
+import { CurrentUser } from '../decorators/user.decorator';
+import { AuthenticatedUser } from '../types/express';
 
 @ApiTags('Financial Control - User')
 @Controller('user')
@@ -24,9 +25,7 @@ export class UserController {
     description: 'User profile retrieved successfully',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  getProfile(@Req() req: AuthenticatedRequest) {
-    const user = req.user;
-
+  getProfile(@CurrentUser() user: AuthenticatedUser) {
     return {
       user: {
         id: user.sub,
