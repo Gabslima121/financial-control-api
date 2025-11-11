@@ -1,4 +1,4 @@
-import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
+import { randomUUID } from 'crypto';
 import { ValueObject } from '../domain/value-object';
 
 export class UuidValueObject extends ValueObject {
@@ -6,14 +6,19 @@ export class UuidValueObject extends ValueObject {
 
   constructor(id?: string) {
     super();
-    this.id = id && id.trim() !== '' ? id : uuidv4();
+    this.id = id && id.trim() !== '' ? id : randomUUID();
     this.validate();
   }
 
   private validate(): void {
-    if (!uuidValidate(this.id)) {
+    if (!UuidValueObject.isValidUuid(this.id)) {
       throw new Error(`Invalid UUID: ${this.id}`);
     }
+  }
+
+  private static isValidUuid(value: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(value);
   }
 
   public toString(): string {
