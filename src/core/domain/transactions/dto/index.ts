@@ -1,7 +1,7 @@
-import { CategoriesDomain } from "../../categories/categories.domain";
-import { CategoryTypeEnum } from "../../categories/dto";
-import { PaymentDestinationsDomain } from "../../payment-destinations/payment-destinations.domain";
-import { UserDomain } from "../../users/users.domain";
+import { CategoriesDomain } from '../../categories/categories.domain';
+import { CategoryTypeEnum } from '../../categories/dto';
+import { PaymentDestinationsDomain } from '../../payment-destinations/payment-destinations.domain';
+import { UserDomain } from '../../users/users.domain';
 
 export enum PaymentMethodEnum {
   CREDIT_CARD = 'credit_card',

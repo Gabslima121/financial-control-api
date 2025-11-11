@@ -1,8 +1,8 @@
-import { ConflictException } from "@nestjs/common";
-import { UserPort } from "../../core/port/user.port";
-import { UserDomainAdapter } from "../../infrastructure/adapters/user/in/user.domain.adapter";
-import { UserOutput } from "../../infrastructure/adapters/user/out/dto";
-import { UserInput } from "../../infrastructure/nestjs/body-inputs/user/user.input";
+import { ConflictException } from '@nestjs/common';
+import { UserPort } from '../../core/port/user.port';
+import { UserDomainAdapter } from '../../infrastructure/adapters/user/in/user.domain.adapter';
+import { UserOutput } from '../../infrastructure/adapters/user/out/dto';
+import { UserInput } from '../../infrastructure/nestjs/body-inputs/user/user.input';
 
 export class CreateUserUseCase {
   constructor(private readonly userPort: UserPort) {}
@@ -19,7 +19,7 @@ export class CreateUserUseCase {
       userDocument: userInput.userDocument,
       userName: userInput.name,
       isActive: true,
-    })
+    });
 
     const createdUser = await this.userPort.createUser(domain);
 
@@ -27,6 +27,6 @@ export class CreateUserUseCase {
       name: createdUser.getUserName(),
       email: createdUser.getEmail(),
       userDocument: createdUser.getUserDocument().getValue(),
-    }
+    };
   }
 }

@@ -1,8 +1,8 @@
-import { CnpjValueObject } from "../../../shared/value-object/cnpj.vo";
-import { CpfValueObject } from "../../../shared/value-object/cpf.vo";
-import { UuidValueObject } from "../../../shared/value-object/uuid-value-object.vo";
-import { UserDomain } from "../users/users.domain";
-import { PaymentDestinationDomainDTO } from "./dto";
+import { CnpjValueObject } from '../../../shared/value-object/cnpj.vo';
+import { CpfValueObject } from '../../../shared/value-object/cpf.vo';
+import { UuidValueObject } from '../../../shared/value-object/uuid-value-object.vo';
+import { UserDomain } from '../users/users.domain';
+import { PaymentDestinationDomainDTO } from './dto';
 
 export class PaymentDestinationsDomain {
   private readonly paymentDestinationId: UuidValueObject;
@@ -12,20 +12,26 @@ export class PaymentDestinationsDomain {
   private description?: string | null;
   private readonly createdAt: Date;
   private updatedAt: Date;
-  
+
   private constructor(params: PaymentDestinationDomainDTO) {
     const isCnpj = CnpjValueObject.isValid(params.companyDocument);
 
-    this.paymentDestinationId = params.paymentDestinationId ? new UuidValueObject(params.paymentDestinationId) : new UuidValueObject();
+    this.paymentDestinationId = params.paymentDestinationId
+      ? new UuidValueObject(params.paymentDestinationId)
+      : new UuidValueObject();
     this.user = params.user;
     this.companyName = params.companyName;
-    this.companyDocument = isCnpj ? new CnpjValueObject(params.companyDocument) : new CpfValueObject(params.companyDocument);
+    this.companyDocument = isCnpj
+      ? new CnpjValueObject(params.companyDocument)
+      : new CpfValueObject(params.companyDocument);
     this.description = params.description;
     this.createdAt = new Date();
     this.updatedAt = new Date();
   }
 
-  static create(params: PaymentDestinationDomainDTO): PaymentDestinationsDomain {
+  static create(
+    params: PaymentDestinationDomainDTO,
+  ): PaymentDestinationsDomain {
     return new PaymentDestinationsDomain(params);
   }
 

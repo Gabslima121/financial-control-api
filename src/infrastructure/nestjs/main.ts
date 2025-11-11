@@ -11,12 +11,15 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Financial API Control')
     .setVersion('1.0')
-    .addApiKey({
-      type: 'apiKey',
-      name: 'Authorization',
-      description: 'Token de autenticação',
-      in: 'header',
-    }, 'Authorization')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'Authorization',
+        description: 'Token de autenticação',
+        in: 'header',
+      },
+      'Authorization',
+    )
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
@@ -29,7 +32,7 @@ async function bootstrap() {
       }
     });
   });
-  
+
   SwaggerModule.setup('api-docs', app, document);
 
   app.useGlobalFilters(new HttpExceptionFilter());

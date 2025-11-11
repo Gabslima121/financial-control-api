@@ -1,5 +1,5 @@
-import { UserDomainDTO } from "../../../../core/domain/users/dto";
-import { UserDomain } from "../../../../core/domain/users/users.domain";
+import { UserDomainDTO } from '../../../../core/domain/users/dto';
+import { UserDomain } from '../../../../core/domain/users/users.domain';
 
 export class UserDomainAdapter {
   public static toDomain(dto: UserDomainDTO): UserDomain {

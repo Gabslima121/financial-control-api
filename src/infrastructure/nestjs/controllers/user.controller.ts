@@ -19,18 +19,21 @@ export class UserController {
 
   @Get('profile')
   @ApiOperation({ summary: 'Get authenticated user profile' })
-  @ApiResponse({ status: 200, description: 'User profile retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'User profile retrieved successfully',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   getProfile(@Req() req: AuthenticatedRequest) {
     const user = req.user;
-    
+
     return {
       user: {
         id: user.sub,
         email: user.email,
         name: user.name,
-        ...user
-      }
+        ...user,
+      },
     };
   }
 }

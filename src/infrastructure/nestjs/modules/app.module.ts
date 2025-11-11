@@ -4,13 +4,13 @@ import { AuthMiddleware } from '../middlewares/auth.middleware';
 import { UsersModule } from '../modules/users.module';
 
 @Module({
-  providers:[
+  providers: [
     { provide: 'TokenValidatorPort', useClass: JwtTokenValidatorRepository },
   ],
   imports: [UsersModule],
 })
 export class AppModule {
-    configure(consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes('*');
   }
 }

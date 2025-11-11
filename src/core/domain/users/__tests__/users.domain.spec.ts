@@ -34,7 +34,9 @@ describe('UserDomain', () => {
     user.updateEmail('alice.new@example.com');
     expect(user.getEmail()).toBe('alice.new@example.com');
     expect(user.getUpdatedAt()).not.toBe(before);
-    expect(user.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(before.getTime());
+    expect(user.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(
+      before.getTime(),
+    );
   });
 
   it('deve ativar e inativar o usuário', () => {
@@ -45,6 +47,8 @@ describe('UserDomain', () => {
     user.inactiveUser();
     expect(user.getIsActive()).toBe(false);
     expect(user.getUpdatedAt()).not.toBe(afterActivate);
-    expect(user.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(afterActivate.getTime());
+    expect(user.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(
+      afterActivate.getTime(),
+    );
   });
 });

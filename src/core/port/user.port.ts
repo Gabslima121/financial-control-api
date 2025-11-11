@@ -1,4 +1,4 @@
-import { UserDomain } from "../domain/users/users.domain";
+import { UserDomain } from '../domain/users/users.domain';
 
 export interface UserPort {
   createUser(user: UserDomain): Promise<UserDomain>;

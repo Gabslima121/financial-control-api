@@ -1,6 +1,6 @@
-import { UuidValueObject } from "../../../shared/value-object/uuid-value-object.vo";
-import { UserDomain } from "../users/users.domain";
-import { AccountBalanceDTO } from "./dto";
+import { UuidValueObject } from '../../../shared/value-object/uuid-value-object.vo';
+import { UserDomain } from '../users/users.domain';
+import { AccountBalanceDTO } from './dto';
 
 export class AccountBalanceDomain {
   private readonly balanceId: UuidValueObject;
@@ -10,7 +10,9 @@ export class AccountBalanceDomain {
   private readonly description: string | null;
 
   private constructor(params: AccountBalanceDTO) {
-    this.balanceId = params.balanceId ? new UuidValueObject(params.balanceId) : new UuidValueObject();
+    this.balanceId = params.balanceId
+      ? new UuidValueObject(params.balanceId)
+      : new UuidValueObject();
     this.user = params.user;
     this.balance = params.balance;
     this.balanceDate = params.balanceDate;

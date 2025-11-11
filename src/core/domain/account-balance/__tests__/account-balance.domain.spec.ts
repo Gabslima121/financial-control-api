@@ -12,7 +12,9 @@ describe('AccountBalanceDomain', () => {
     isActive: true,
   };
 
-  const buildBaseParams = (overrides: Partial<Parameters<typeof AccountBalanceDomain.create>[0]> = {}) => {
+  const buildBaseParams = (
+    overrides: Partial<Parameters<typeof AccountBalanceDomain.create>[0]> = {},
+  ) => {
     const user = UserDomain.create(baseUserParams);
     return {
       balanceId: '550e8400-e29b-41d4-a716-446655440000',
@@ -39,7 +41,8 @@ describe('AccountBalanceDomain', () => {
     const balance = AccountBalanceDomain.create(params);
     const generatedId = balance.getBalanceId();
     expect(generatedId).not.toBe('');
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     expect(uuidRegex.test(generatedId)).toBe(true);
   });
 

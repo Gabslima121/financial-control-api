@@ -13,16 +13,18 @@ describe('CategoriesDomain', () => {
     isActive: true,
   };
 
-  const buildBaseCategoryParams = (overrides: Partial<{
-    categoryId: string;
-    user: UserDomain | null;
-    categoryName: string;
-    categoryType: CategoryTypeEnum;
-    description: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-    isActive: boolean;
-  }> = {}) => {
+  const buildBaseCategoryParams = (
+    overrides: Partial<{
+      categoryId: string;
+      user: UserDomain | null;
+      categoryName: string;
+      categoryType: CategoryTypeEnum;
+      description: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+      isActive: boolean;
+    }> = {},
+  ) => {
     const user = UserDomain.create(baseUserParams);
     return {
       categoryId: '550e8400-e29b-41d4-a716-446655440000',
@@ -57,7 +59,8 @@ describe('CategoriesDomain', () => {
     const generatedId = category.getCategoryId().getValue();
 
     expect(generatedId).not.toBe('');
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     expect(uuidRegex.test(generatedId)).toBe(true);
   });
 
@@ -69,13 +72,17 @@ describe('CategoriesDomain', () => {
     category.activeCategory();
     expect(category.getIsActive()).toBe(true);
     expect(category.getUpdatedAt()).not.toBe(beforeActivate);
-    expect(category.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(beforeActivate.getTime());
+    expect(category.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(
+      beforeActivate.getTime(),
+    );
 
     const beforeInactive = category.getUpdatedAt();
     category.inactiveCategory();
     expect(category.getIsActive()).toBe(false);
     expect(category.getUpdatedAt()).not.toBe(beforeInactive);
-    expect(category.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(beforeInactive.getTime());
+    expect(category.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(
+      beforeInactive.getTime(),
+    );
   });
 
   it('deve atualizar a descrição e o updatedAt', () => {
@@ -86,13 +93,17 @@ describe('CategoriesDomain', () => {
     category.updateDescription('Nova descrição');
     expect(category.getDescription()).toBe('Nova descrição');
     expect(category.getUpdatedAt()).not.toBe(before);
-    expect(category.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(before.getTime());
+    expect(category.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(
+      before.getTime(),
+    );
 
     const beforeNull = category.getUpdatedAt();
     category.updateDescription(null);
     expect(category.getDescription()).toBeNull();
     expect(category.getUpdatedAt()).not.toBe(beforeNull);
-    expect(category.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(beforeNull.getTime());
+    expect(category.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(
+      beforeNull.getTime(),
+    );
   });
 
   it('deve aceitar usuário nulo', () => {

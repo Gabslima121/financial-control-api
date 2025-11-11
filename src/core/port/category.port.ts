@@ -1,5 +1,5 @@
-import { CategoriesDomain } from "../domain/categories/categories.domain";
-import { CategoryTypeEnum } from "../domain/categories/dto";
+import { CategoriesDomain } from '../domain/categories/categories.domain';
+import { CategoryTypeEnum } from '../domain/categories/dto';
 
 export interface CategoryPort {
   createCategory(category: CategoriesDomain): Promise<CategoriesDomain>;

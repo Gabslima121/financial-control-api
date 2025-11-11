@@ -18,7 +18,7 @@ import { PrismaProvider } from '../providers/prisma.provider';
       provide: CreateUserUseCase,
       useFactory: (userPort: UserPort) => new CreateUserUseCase(userPort),
       inject: ['UserPort'],
-    }
+    },
   ],
   controllers: [UserController],
   exports: ['UserPort'],

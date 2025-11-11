@@ -1,4 +1,4 @@
-import { UserDomain } from "../../users/users.domain";
+import { UserDomain } from '../../users/users.domain';
 
 export interface AccountBalanceDTO {
   balanceId: string;

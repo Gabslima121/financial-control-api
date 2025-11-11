@@ -40,7 +40,9 @@ describe('TransactionsDomain', () => {
     return { user, category, destination };
   };
 
-  const buildBaseParams = (overrides: Partial<Parameters<typeof TransactionsDomain.create>[0]> = {}) => {
+  const buildBaseParams = (
+    overrides: Partial<Parameters<typeof TransactionsDomain.create>[0]> = {},
+  ) => {
     const { user, category, destination } = buildRefs();
     return {
       transactionId: '550e8400-e29b-41d4-a716-446655440000',
@@ -92,7 +94,8 @@ describe('TransactionsDomain', () => {
     const tx = TransactionsDomain.create(params);
     const generatedId = tx.getTransactionId().getValue();
     expect(generatedId).not.toBe('');
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     expect(uuidRegex.test(generatedId)).toBe(true);
   });
 
@@ -120,7 +123,9 @@ describe('TransactionsDomain', () => {
   });
 
   it('deve aceitar usuário, categoria e destino nulos', () => {
-    const tx = TransactionsDomain.create(buildBaseParams({ user: null, category: null, destination: null }));
+    const tx = TransactionsDomain.create(
+      buildBaseParams({ user: null, category: null, destination: null }),
+    );
     expect(tx.getUser()).toBeNull();
     expect(tx.getCategory()).toBeNull();
     expect(tx.getDestination()).toBeNull();

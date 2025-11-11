@@ -1,8 +1,7 @@
-
-import { CnpjValueObject } from "../../../shared/value-object/cnpj.vo";
-import { CpfValueObject } from "../../../shared/value-object/cpf.vo";
-import { UuidValueObject } from "../../../shared/value-object/uuid-value-object.vo";
-import { UserDomainDTO } from "./dto";
+import { CnpjValueObject } from '../../../shared/value-object/cnpj.vo';
+import { CpfValueObject } from '../../../shared/value-object/cpf.vo';
+import { UuidValueObject } from '../../../shared/value-object/uuid-value-object.vo';
+import { UserDomainDTO } from './dto';
 
 export class UserDomain {
   private readonly userId: UuidValueObject;
@@ -16,9 +15,13 @@ export class UserDomain {
   private constructor(params: UserDomainDTO) {
     const isCnpj = CnpjValueObject.isValid(params.userDocument);
 
-    this.userId = params.userId ? new UuidValueObject(params.userId) : new UuidValueObject();
+    this.userId = params.userId
+      ? new UuidValueObject(params.userId)
+      : new UuidValueObject();
     this.userName = params.userName;
-    this.userDocument = isCnpj ? new CnpjValueObject(params.userDocument) : new CpfValueObject(params.userDocument);
+    this.userDocument = isCnpj
+      ? new CnpjValueObject(params.userDocument)
+      : new CpfValueObject(params.userDocument);
     this.email = params.email;
     this.createdAt = new Date();
     this.updatedAt = new Date();

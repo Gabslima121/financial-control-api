@@ -1,6 +1,6 @@
-import { UuidValueObject } from "../../../shared/value-object/uuid-value-object.vo";
-import { UserDomain } from "../users/users.domain";
-import { CategoriesDomainDTO, CategoryTypeEnum } from "./dto";
+import { UuidValueObject } from '../../../shared/value-object/uuid-value-object.vo';
+import { UserDomain } from '../users/users.domain';
+import { CategoriesDomainDTO, CategoryTypeEnum } from './dto';
 
 export class CategoriesDomain {
   private readonly categoryId: UuidValueObject;
@@ -13,7 +13,9 @@ export class CategoriesDomain {
   private isActive: boolean;
 
   private constructor(params: CategoriesDomainDTO) {
-    this.categoryId = params.categoryId ? new UuidValueObject(params.categoryId) : new UuidValueObject();
+    this.categoryId = params.categoryId
+      ? new UuidValueObject(params.categoryId)
+      : new UuidValueObject();
     this.user = params.user;
     this.categoryName = params.categoryName;
     this.categoryType = params.categoryType;

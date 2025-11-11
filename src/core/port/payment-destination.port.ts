@@ -1,6 +1,10 @@
-import { PaymentDestinationsDomain } from "../domain/payment-destinations/payment-destinations.domain";
+import { PaymentDestinationsDomain } from '../domain/payment-destinations/payment-destinations.domain';
 
 export interface PaymentDestinationPort {
-  createPaymentDestination(paymentDestination: PaymentDestinationsDomain): Promise<PaymentDestinationsDomain>;
-  listPaymentDestinationByUser(userId: string): Promise<PaymentDestinationsDomain[]>;
+  createPaymentDestination(
+    paymentDestination: PaymentDestinationsDomain,
+  ): Promise<PaymentDestinationsDomain>;
+  listPaymentDestinationByUser(
+    userId: string,
+  ): Promise<PaymentDestinationsDomain[]>;
 }
