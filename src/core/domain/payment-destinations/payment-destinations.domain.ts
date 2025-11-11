@@ -1,6 +1,6 @@
-import { CnpjValueObject } from "../../shared/value-object/cnpj.vo";
-import { CpfValueObject } from "../../shared/value-object/cpf.vo";
-import { UuidValueObject } from "../../shared/value-object/uuid-value-object.vo";
+import { CnpjValueObject } from "../../../shared/value-object/cnpj.vo";
+import { CpfValueObject } from "../../../shared/value-object/cpf.vo";
+import { UuidValueObject } from "../../../shared/value-object/uuid-value-object.vo";
 import { UserDomain } from "../users/users.domain";
 import { PaymentDestinationDomainDTO } from "./dto";
 

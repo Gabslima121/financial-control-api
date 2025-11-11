@@ -1,4 +1,4 @@
-import { UuidValueObject } from "../../shared/value-object/uuid-value-object.vo";
+import { UuidValueObject } from "../../../shared/value-object/uuid-value-object.vo";
 import { UserDomain } from "../users/users.domain";
 import { CategoriesDomainDTO, CategoryTypeEnum } from "./dto";
 
