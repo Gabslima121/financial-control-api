@@ -13,7 +13,7 @@ export class AccountBalanceDomain {
     this.balanceId = params.balanceId
       ? new UuidValueObject(params.balanceId)
       : new UuidValueObject();
-    this.user = params.user;
+    this.user = params.user!;
     this.balance = params.balance;
     this.balanceDate = params.balanceDate;
     this.description = params.description;
