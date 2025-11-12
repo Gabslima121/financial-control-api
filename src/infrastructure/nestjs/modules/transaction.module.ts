@@ -30,5 +30,6 @@ import { CategoryModule } from "./category.module";
     }
   ],
   controllers: [TransactionController],
+  exports: ['TransactionPort']
 })
 export class TransactionModule {}

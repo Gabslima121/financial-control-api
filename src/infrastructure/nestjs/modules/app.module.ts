@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { JwtTokenValidatorRepository } from '../../adapters/auth/out/jwt-token-validator.repository';
 import { AuthMiddleware } from '../middlewares/auth.middleware';
 import { UsersModule } from '../modules/users.module';
+import { AccountBalanceModule } from './account-balance.module';
 import { CategoryModule } from './category.module';
 import { TransactionModule } from './transaction.module';
 
@@ -12,7 +13,8 @@ import { TransactionModule } from './transaction.module';
   imports: [
     UsersModule,
     CategoryModule,
-    TransactionModule
+    TransactionModule,
+    AccountBalanceModule
   ],
 })
 export class AppModule {
