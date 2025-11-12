@@ -1,6 +1,8 @@
 import { CategoryTypeEnum } from "../../core/domain/categories/dto";
 import { AccountBalancePort } from "../../core/port/account-balance.port";
 import { TransactionPort } from "../../core/port/transaction.port";
+import { AccountBalanceOutput } from "../../infrastructure/adapters/account-balance/out/dto";
+import { NotFoundException } from "../../shared/errors/custom.exception";
 
 export class CreateAccountBalanceUseCase {
   constructor(
@@ -8,7 +10,7 @@ export class CreateAccountBalanceUseCase {
     private readonly transactionPort: TransactionPort,
   ) {}
 
-  async createAccountBalance(userId: string) {
+  async createAccountBalance(userId: string): Promise<AccountBalanceOutput> {
     const transactions = await this.transactionPort.findTransactionsByUser(userId);
 
     let amout = 0
@@ -21,11 +23,20 @@ export class CreateAccountBalanceUseCase {
       }
     }
 
-    const accountBalance = await this.accountBalancePort.createAccountBalance(
+    await this.accountBalancePort.createAccountBalance(
       amout,
       userId,
     )
 
-    return accountBalance;
+    const latestAccountBalance = await this.accountBalancePort.findLatestAccountBalance(userId);
+
+    if (!latestAccountBalance) {
+      throw new NotFoundException('Account balance not found');
+    }
+
+    return {
+      balance: latestAccountBalance.getBalance(),
+      balanceDate: latestAccountBalance.getBalanceDate(),
+    };
   }
 }

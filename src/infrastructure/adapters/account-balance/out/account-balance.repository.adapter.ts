@@ -8,6 +8,24 @@ export class AccountBalanceRepositoryAdapter implements AccountBalancePort {
     private readonly prisma: PrismaClient,
   ) {}
 
+  async findLatestAccountBalance(userId: string): Promise<AccountBalanceDomain | null> {
+    const accountBalance = await this.prisma.accountBalance.findFirst({
+      where: { userId },
+      orderBy: { balanceDate: 'desc' },
+    });
+
+    if (!accountBalance) {
+      return null;
+    }
+
+    return AccountBalanceDomainAdapter.toDomain({
+      balanceId: accountBalance.balanceId,
+      balance: accountBalance.balance.toNumber(),
+      balanceDate: accountBalance.balanceDate,
+      description: accountBalance.notes || '',
+    });
+  }
+
   async createAccountBalance(amount: number, userId: string): Promise<AccountBalanceDomain> {
     const accountBalance = await this.prisma.accountBalance.create({
       data: {
