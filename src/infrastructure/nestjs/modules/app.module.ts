@@ -3,6 +3,7 @@ import { JwtTokenValidatorRepository } from '../../adapters/auth/out/jwt-token-v
 import { AuthMiddleware } from '../middlewares/auth.middleware';
 import { UsersModule } from '../modules/users.module';
 import { CategoryModule } from './category.module';
+import { TransactionModule } from './transaction.module';
 
 @Module({
   providers: [
@@ -10,7 +11,8 @@ import { CategoryModule } from './category.module';
   ],
   imports: [
     UsersModule,
-    CategoryModule
+    CategoryModule,
+    TransactionModule
   ],
 })
 export class AppModule {

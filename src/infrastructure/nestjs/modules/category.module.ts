@@ -20,6 +20,7 @@ import { PrismaProvider } from "../providers/prisma.provider";
       inject: ['CategoryPort'],
     }
   ],
-  controllers: [CategoryController]
+  controllers: [CategoryController],
+  exports: ['CategoryPort'],
 })
 export class CategoryModule {}
