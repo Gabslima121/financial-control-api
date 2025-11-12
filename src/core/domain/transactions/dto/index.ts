@@ -18,6 +18,9 @@ export enum TransactionStatusEnum {
   CANCELLED = 'cancelled',
 }
 
+export const TransactionStatusValues = Object.values(TransactionStatusEnum);
+export const PaymentMethodValues = Object.values(PaymentMethodEnum);
+
 export interface TransactionDomainDTO {
   transactionId?: string;
   user?: UserDomain | null;
