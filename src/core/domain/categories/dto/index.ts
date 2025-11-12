@@ -5,13 +5,13 @@ export enum CategoryTypeEnum {
   EXPENSE = 'expense',
 }
 
+export const CategoryTypeEnumValues = Object.values(CategoryTypeEnum);
+
 export interface CategoriesDomainDTO {
-  categoryId: string;
+  categoryId?: string;
   user?: UserDomain | null;
   categoryName: string;
   categoryType: CategoryTypeEnum;
   description?: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  isActive: boolean;
+  createdAt?: Date;
 }

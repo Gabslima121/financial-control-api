@@ -9,8 +9,6 @@ export class CategoriesDomain {
   private readonly categoryType: CategoryTypeEnum;
   private description?: string | null;
   private readonly createdAt: Date;
-  private updatedAt: Date;
-  private isActive: boolean;
 
   private constructor(params: CategoriesDomainDTO) {
     this.categoryId = params.categoryId
@@ -21,8 +19,6 @@ export class CategoriesDomain {
     this.categoryType = params.categoryType;
     this.description = params.description || null;
     this.createdAt = new Date();
-    this.updatedAt = new Date();
-    this.isActive = params.isActive;
   }
 
   static create(params: CategoriesDomainDTO): CategoriesDomain {
@@ -51,28 +47,5 @@ export class CategoriesDomain {
 
   getCreatedAt(): Date {
     return this.createdAt;
-  }
-
-  getUpdatedAt(): Date {
-    return this.updatedAt;
-  }
-
-  getIsActive(): boolean {
-    return this.isActive;
-  }
-
-  inactiveCategory(): void {
-    this.isActive = false;
-    this.updatedAt = new Date();
-  }
-
-  activeCategory(): void {
-    this.isActive = true;
-    this.updatedAt = new Date();
-  }
-
-  updateDescription(description: string | null): void {
-    this.description = description || null;
-    this.updatedAt = new Date();
   }
 }

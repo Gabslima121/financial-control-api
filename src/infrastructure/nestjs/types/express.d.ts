@@ -2,8 +2,7 @@ import { Request } from 'express';
 
 export interface AuthenticatedUser {
   sub: string;
-  email?: string;
-  name?: string;
+  id: string;
   [key: string]: any;
 }
 

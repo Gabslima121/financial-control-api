@@ -14,8 +14,6 @@ export class CategoryDomainAdapter {
       categoryType: domain.getCategoryType(),
       description: domain.getDescription(),
       createdAt: domain.getCreatedAt(),
-      updatedAt: domain.getUpdatedAt(),
-      isActive: domain.getIsActive(),
     };
   }
 }

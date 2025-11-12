@@ -28,9 +28,6 @@ export class UserController {
   getProfile(@CurrentUser() user: AuthenticatedUser) {
     return {
       user: {
-        id: user.sub,
-        email: user.email,
-        name: user.name,
         ...user,
       },
     };
