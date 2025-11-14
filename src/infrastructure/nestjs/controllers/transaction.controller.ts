@@ -1,6 +1,7 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateTransactionUseCase } from "../../../application/transaction/create-transaction.usecase";
+import { FindUserTransactionsUseCase } from "../../../application/transaction/find-user-transactions.usecase";
 import { TransactionInput } from "../body-inputs/transaction/transaction.input";
 import { CurrentUser } from "../decorators/user.decorator";
 import { AuthenticatedUser } from "../types/express";
@@ -9,7 +10,8 @@ import { AuthenticatedUser } from "../types/express";
 @Controller('transaction')
 export class TransactionController {
   constructor(
-    private readonly createTransactionUseCase: CreateTransactionUseCase
+    private readonly createTransactionUseCase: CreateTransactionUseCase,
+    private readonly findUserTransactionsUseCase: FindUserTransactionsUseCase
   ) {}
 
   @Post()
@@ -18,5 +20,12 @@ export class TransactionController {
     @CurrentUser() user: AuthenticatedUser
   ) {
     return this.createTransactionUseCase.execute(createTransactionInput, user.id);
+  }
+
+  @Get('user')
+  async findUserTransactions(
+    @CurrentUser() user: AuthenticatedUser
+  ) {
+    return this.findUserTransactionsUseCase.execute(user.id);
   }
 }

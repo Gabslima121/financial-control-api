@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { PrismaClient } from "@prisma/client";
 import { CreateTransactionUseCase } from "../../../application/transaction/create-transaction.usecase";
+import { FindUserTransactionsUseCase } from "../../../application/transaction/find-user-transactions.usecase";
 import { CategoryPort } from "../../../core/port/category.port";
 import { TransactionPort } from "../../../core/port/transaction.port";
 import { PrismaTransactionRepository } from "../../adapters/transaction/out/transaction.repository.adapter";
@@ -27,6 +28,13 @@ import { CategoryModule } from "./category.module";
         categoryPort
       ),
       inject: ['TransactionPort', 'CategoryPort'],
+    },
+    {
+      provide: FindUserTransactionsUseCase,
+      useFactory: (
+        transactionPort: TransactionPort
+      ) => new FindUserTransactionsUseCase(transactionPort),
+      inject: ['TransactionPort'],
     }
   ],
   controllers: [TransactionController],

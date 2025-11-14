@@ -7,6 +7,22 @@ import { CategoryDomainAdapter } from "../in/category.domain.adapter";
 export class PrismaCategoryRepository implements CategoryPort {
   constructor(private readonly prisma: PrismaClient) {}
 
+  async findCategoryByUserId(userId: string): Promise<CategoriesDomain[]> {
+    const categories = await this.prisma.category.findMany({
+      where: {
+        userId
+      }
+    });
+
+    return categories.map((item) => CategoryDomainAdapter.toDomain({
+      categoryId: item.categoryId,
+      categoryName: item.categoryName,
+      categoryType: item.categoryType as CategoryTypeEnum,
+      createdAt: item.createdAt,
+      description: item.description,
+    }))
+  }
+
   async findCategoryById(categoryId: string): Promise<CategoriesDomain | null> {
     const category = await this.prisma.category.findFirst({
       where: {
