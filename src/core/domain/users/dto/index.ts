@@ -3,6 +3,7 @@ export interface UserDomainDTO {
   userName: string;
   userDocument: string;
   email: string;
+  password: string;
   createdAt?: Date;
   updatedAt?: Date;
   isActive: boolean;

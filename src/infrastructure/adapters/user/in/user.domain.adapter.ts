@@ -15,6 +15,7 @@ export class UserDomainAdapter {
       createdAt: domain.getCreatedAt(),
       updatedAt: domain.getUpdatedAt(),
       isActive: domain.getIsActive(),
+      password: domain.getPassword(),
     };
   }
 }

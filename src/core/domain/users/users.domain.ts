@@ -8,6 +8,7 @@ export class UserDomain {
   private readonly userName: string;
   private readonly userDocument: CnpjValueObject | CpfValueObject;
   private email: string;
+  private readonly password: string;
   private readonly createdAt: Date;
   private updatedAt: Date;
   private isActive: boolean;
@@ -22,6 +23,7 @@ export class UserDomain {
     this.userDocument = isCnpj
       ? new CnpjValueObject(params.userDocument)
       : new CpfValueObject(params.userDocument);
+    this.password = params.password;
     this.email = params.email;
     this.createdAt = new Date();
     this.updatedAt = new Date();
@@ -58,6 +60,10 @@ export class UserDomain {
 
   getIsActive(): boolean {
     return this.isActive;
+  }
+
+  getPassword(): string {
+    return this.password;
   }
 
   updateEmail(email: string): void {

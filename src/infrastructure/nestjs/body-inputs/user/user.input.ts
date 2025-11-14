@@ -16,4 +16,9 @@ export class UserInput {
   @IsNotEmpty()
   @ApiProperty({ description: 'User document' })
   readonly userDocument: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ description: 'User password' })
+  readonly password: string;
 }

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { JwtTokenValidatorRepository } from '../../adapters/auth/out/jwt-token-validator.repository';
 import { AuthMiddleware } from '../middlewares/auth.middleware';
 import { UsersModule } from '../modules/users.module';
@@ -19,6 +19,12 @@ import { TransactionModule } from './transaction.module';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('*');
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        { path: '/user/login', method: RequestMethod.POST },
+        { path: 'api-docs', method: RequestMethod.ALL },
+      )
+      .forRoutes('*');
   }
 }

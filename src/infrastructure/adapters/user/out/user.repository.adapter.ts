@@ -1,10 +1,19 @@
 import { PrismaClient } from '@prisma/client';
+import { compareSync, hashSync } from 'bcrypt';
 import { UserDomain } from '../../../../core/domain/users/users.domain';
 import { UserPort } from '../../../../core/port/user.port';
 import { UserDomainAdapter } from '../in/user.domain.adapter';
 
 export class PrismaUserRepository implements UserPort {
   constructor(private readonly prisma: PrismaClient) {}
+
+  async decryptPassword(password: string, hash: string): Promise<boolean> {
+    return compareSync(password, hash);
+  }
+
+  async encryptPassword(password: string): Promise<string> {
+    return hashSync(password, 10);
+  }
 
   async createUser(user: UserDomain): Promise<UserDomain> {
     const data = UserDomainAdapter.toDTO(user);

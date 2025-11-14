@@ -32,6 +32,7 @@ model User {
   userName     String   @map("user_name") @db.VarChar(255)
   userDocument String   @unique @map("user_document") @db.VarChar(14)
   email        String   @unique @db.VarChar(255)
+  password     String   @map("password") @db.VarChar(255) @default("")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
   isActive     Boolean  @default(true) @map("is_active")

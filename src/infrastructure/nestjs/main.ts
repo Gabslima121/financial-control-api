@@ -25,12 +25,16 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   const document = documentFactory();
 
-  Object.values(document.paths).forEach((path: any) => {
-    Object.values(path).forEach((method: any) => {
-      if (method.security === undefined) {
-        method.security = [{ Authorization: [] }];
+  Object.entries(document.paths).forEach(([pathKey, pathItem]: [string, any]) => {
+    Object.entries(pathItem).forEach(([methodKey, operation]: [string, any]) => {
+      if (operation && operation.security === undefined) {
+        operation.security = [{ Authorization: [] }];
       }
     });
+
+    if (pathKey === '/user/login' && pathItem.post) {
+      pathItem.post.security = [];
+    }
   });
 
   SwaggerModule.setup('api-docs', app, document);
