@@ -1,0 +1,6 @@
+import { UserDomain } from "../domain/user/user.domain";
+
+export interface UserPort {
+    createUser(user: UserDomain): Promise<void>;
+    findUserByEmail(email: string): Promise<UserDomain | null>;
+}

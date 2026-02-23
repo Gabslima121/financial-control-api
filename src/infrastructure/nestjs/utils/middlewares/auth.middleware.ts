@@ -1,7 +1,7 @@
 import { Inject, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { TokenValidatorPort } from '../../../core/port/token-validator.port';
-import { UnauthorizedException } from '../../../shared/errors/custom.exception';
+import { TokenValidatorPort } from '../../../../core/port/token-validator.port';
+import { UnauthorizedException } from '../../../../shared/errors/custom.exception';
 
 export class AuthMiddleware implements NestMiddleware {
   constructor(

@@ -1,12 +1,13 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { JwtTokenValidatorRepository } from '../adapters/auth/out/jwt-token-validator.repository';
-import { AuthMiddleware } from './middlewares/auth.middleware';
+import { AuthMiddleware } from './utils/middlewares/auth.middleware';
+import { UserModule } from './user/user.module';
 
 @Module({
   providers: [
     { provide: 'TokenValidatorPort', useClass: JwtTokenValidatorRepository },
   ],
-  imports: [],
+  imports: [UserModule],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
@@ -15,6 +16,7 @@ export class AppModule {
       .exclude(
         { path: '/user/login', method: RequestMethod.POST },
         { path: 'api-docs', method: RequestMethod.ALL },
+        { path: '/user/create', method: RequestMethod.POST },
       )
       .forRoutes('*');
   }
