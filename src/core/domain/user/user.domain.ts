@@ -16,7 +16,7 @@ export class UserDomain {
     private constructor(props: UserDomainDTO) {
         const document = this.createDocument(props.userDocument);
 
-        this.userId = new UuidValueObject(props.userId);
+        this.userId = props.userId ? new UuidValueObject(props.userId) : new UuidValueObject();
         this.userName = props.userName;
         this.userDocument = document;
         this.email = props.email;
