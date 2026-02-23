@@ -12,11 +12,13 @@ export class CreateUserUseCase {
             throw new Error("User already exists");
         }
 
+        const encryptedPassword = await this.userPort.encryptPassword(userDto.password);
+
         const userDomainToCreate = UserDomainAdapter.toDomain({
             email: userDto.email,
             userName: userDto.name,
             userDocument: userDto.document,
-            password: userDto.password,
+            password: encryptedPassword,
             isActive: true,
         });
 

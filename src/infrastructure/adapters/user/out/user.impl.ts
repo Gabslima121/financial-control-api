@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "@prisma/client";
-import { UserDomainDTO } from "src/core/domain/user/dto";
+import { compareSync, hashSync } from 'bcrypt';
 import { UserDomain } from "src/core/domain/user/user.domain";
 import { UserPort } from "src/core/port/user.port";
 import { UserDomainAdapter } from "../in/user.adapter";
@@ -10,6 +10,20 @@ export class UserRepository implements UserPort {
     constructor(
         private readonly prisma: PrismaClient,
     ) {}
+
+    async decryptPassword(password: string, hash: string): Promise<boolean> {
+        return compareSync(password, hash);
+    }
+
+    async encryptPassword(password: string): Promise<string> {
+        return hashSync(password, 10);
+    }
+
+    async listAllUsers(): Promise<UserDomain[]> {
+        const users = await this.prisma.user.findMany();
+
+        return users.map(UserDomainAdapter.toDomain);
+    }
 
     async findUserByEmail(email: string): Promise<UserDomain | null> {
         const userExists = await this.prisma.user.findUnique({
