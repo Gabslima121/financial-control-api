@@ -1,8 +1,8 @@
 import { UserDomain } from "../../user/user.domain";
 
 export interface TransactionDomainDTO {
-    transactionId: string;
-    user: UserDomain | null;
+    transactionId?: string | null;
+    user?: UserDomain | null;
     type: string;
     amount: number;
     paymentMethod: string;
@@ -13,6 +13,6 @@ export interface TransactionDomainDTO {
     transactionDate: Date;
     dueDate: Date | null;
     paymentDate: Date | null;
-    createdAt: Date | null;
-    updatedAt: Date | null;
+    createdAt?: Date | null;
+    updatedAt?: Date | null;
 }

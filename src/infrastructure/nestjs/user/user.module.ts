@@ -32,5 +32,6 @@ import { JwtTokenValidatorRepository } from "src/infrastructure/adapters/auth/ou
     ],
     imports: [],
     controllers: [UserController],
+    exports: ['UserPort'],
 })
 export class UserModule {}

@@ -6,4 +6,5 @@ export interface UserPort {
     listAllUsers(): Promise<UserDomain[]>;
     encryptPassword(password: string): Promise<string>;
     decryptPassword(password: string, hash: string): Promise<boolean>;
+    findById(userId: string): Promise<UserDomain | null>;
 }

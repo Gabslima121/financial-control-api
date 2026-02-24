@@ -14,7 +14,7 @@ export class AccountBalanceDomain {
         this.user = params.user!;
         this.balance = params.balance;
         this.balanceDate = params.balanceDate || new Date();
-        this.notes = params.notes;
+        this.notes = params.notes || '';
     }
 
     public static create(params: AccountBalanceDomainDTO): AccountBalanceDomain {

@@ -11,6 +11,29 @@ export class UserRepository implements UserPort {
         private readonly prisma: PrismaClient,
     ) {}
 
+    async findById(userId: string): Promise<UserDomain | null> {
+        const userExists = await this.prisma.user.findUnique({
+            where: {
+                userId,
+            },
+        });
+
+        if (!userExists) {
+            return null;
+        }
+
+        return UserDomainAdapter.toDomain({
+            userId: userExists.userId,
+            userName: userExists.userName,
+            userDocument: userExists.userDocument,
+            email: userExists.email,
+            createdAt: userExists.createdAt,
+            updatedAt: userExists.updatedAt,
+            isActive: userExists.isActive,
+            password: userExists.password,
+        })
+    }
+
     async decryptPassword(password: string, hash: string): Promise<boolean> {
         return compareSync(password, hash);
     }

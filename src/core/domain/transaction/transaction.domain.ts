@@ -21,7 +21,7 @@ export class TransactionDomain {
 
     private constructor(props: TransactionDomainDTO) {
         this.transactionId = props.transactionId ? new UuidValueObject(props.transactionId) : new UuidValueObject();
-        this.user = props.user;
+        this.user = props.user!;
         this.type = props.type as TransactionType;
         this.amount = props.amount;
         this.paymentMethod = props.paymentMethod as PaymentMethod;

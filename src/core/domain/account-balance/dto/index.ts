@@ -5,5 +5,5 @@ export interface AccountBalanceDomainDTO {
     user: UserDomain | null;
     balance: number;
     balanceDate: Date;
-    notes: string;
+    notes: string | null;
 }
