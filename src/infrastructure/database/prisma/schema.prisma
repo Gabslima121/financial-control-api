@@ -12,73 +12,88 @@ enum TransactionType {
   expense
 }
 
-enum PaymentMethod {
-  credit_card
-  debit_card
-  pix
-  nupay
-  cash
-  bank_transfer
-}
-
 enum TransactionStatus {
   pending
   paid
   cancelled
 }
 
-model User {
-  userId       String   @id @default(uuid()) @map("user_id") @db.Uuid
-  userName     String   @map("user_name") @db.VarChar(255)
-  userDocument String   @unique @map("user_document") @db.VarChar(14)
-  email        String   @unique @db.VarChar(255)
-  password     String   @default("") @map("password") @db.VarChar(255)
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  isActive     Boolean  @default(true) @map("is_active")
-
-  transactions    Transaction[]
-  accountBalances AccountBalance[]
-
-  @@index([email])
-  @@index([userDocument])
-  @@map("users")
+enum PaymentMethod {
+  credit_card
+  debit_card
+  pix
+  bank_transfer
+  cash
+  other
 }
 
-model Transaction {
-  transactionId      String            @id @default(uuid()) @map("transaction_id") @db.Uuid
-  userId             String            @map("user_id") @db.Uuid
-  transactionType    TransactionType   @map("transaction_type")
-  amount             Decimal           @db.Decimal(15, 2)
-  paymentMethod      PaymentMethod     @map("payment_method")
-  installments       Int               @default(1)
-  currentInstallment Int               @default(1) @map("current_installment")
-  description        String?           @db.Text
-  transactionStatus  TransactionStatus @default(pending) @map("transaction_status")
-  transactionDate    DateTime          @map("transaction_date") @db.Date
-  dueDate            DateTime?         @map("due_date") @db.Date
-  paymentDate        DateTime?         @map("payment_date")
-  createdAt          DateTime          @default(now()) @map("created_at")
-  updatedAt          DateTime          @updatedAt @map("updated_at")
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(255)
+  document  String   @unique @db.VarChar(14)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  accounts  Account[]
+}
+
+model Account {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @db.Uuid
+  name           String   @db.VarChar(100)
+  bankName       String?  @db.VarChar(100)
+  initialBalance Decimal  @db.Decimal(15, 2)
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bankStatements BankStatementTransaction[]
+  transactions   FinancialTransaction[]
 
   @@index([userId])
-  @@index([transactionDate])
-  @@index([transactionStatus])
-  @@index([transactionType])
-  @@map("transactions")
 }
 
-model AccountBalance {
-  balanceId   String   @id @default(uuid()) @map("balance_id") @db.Uuid
-  userId      String   @map("user_id") @db.Uuid
-  balance     Decimal  @default(0) @db.Decimal(15, 2)
-  balanceDate DateTime @default(now()) @map("balance_date")
-  notes       String?  @db.Text
+model BankStatementTransaction {
+  id          String   @id @default(uuid()) @db.Uuid
+  accountId   String   @db.Uuid
+  fitId       String   @db.VarChar(100) // ID único do OFX
+  amount      Decimal  @db.Decimal(15, 2) // já vem positivo ou negativo
+  postedAt    DateTime // data real do banco
+  description String?  @db.Text
+  rawType     String?  @db.VarChar(50) // CREDIT / DEBIT
+  createdAt   DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  @@index([userId, balanceDate(sort: Desc)])
-  @@map("account_balance")
+  financialTransaction FinancialTransaction?
+
+  @@unique([accountId, fitId]) // impede duplicação de OFX
+  @@index([accountId, postedAt])
+}
+
+model FinancialTransaction {
+  id            String            @id @default(uuid()) @db.Uuid
+  accountId     String            @db.Uuid
+  type          TransactionType
+  status        TransactionStatus @default(pending)
+  amount        Decimal           @db.Decimal(15, 2)
+  description   String?           @db.Text
+  paymentMethod PaymentMethod?
+  dueDate       DateTime?
+  paidAt        DateTime?
+  installments  Int               @default(1)
+  installment   Int               @default(1)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  bankStatementId String? @unique @db.Uuid
+  bankStatement   BankStatementTransaction? @relation(fields: [bankStatementId], references: [id])
+
+  @@index([accountId, paidAt])
+  @@index([status])
 }

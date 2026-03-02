@@ -20,7 +20,7 @@ export class LoginUserUseCase {
             throw new Error("Invalid password");
         }
 
-        const token = await this.tokenValidatorPort.createToken({ id: userExists.getUserId() });
+        const token = await this.tokenValidatorPort.createToken({ id: userExists.getId() });
 
         return { token };
     }

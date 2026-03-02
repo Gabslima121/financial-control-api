@@ -1,7 +1,7 @@
 export interface UserDomainDTO {
-    userId?: string;
-    userName: string;
-    userDocument: string;
+    id?: string;
+    name: string;
+    document: string;
     email: string;
     password: string;
     createdAt?: Date | null;

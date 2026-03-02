@@ -8,9 +8,9 @@ export class UserDomainAdapter {
 
     public static toDTO(domain: UserDomain): UserDomainDTO {
         return {
-            userId: domain.getUserId(),
-            userName: domain.getUserName(),
-            userDocument: domain.getUserDocument(),
+            id: domain.getId(),
+            name: domain.getName(),
+            document: domain.getDocument(),
             email: domain.getEmail(),
             createdAt: domain.getCreatedAt(),
             updatedAt: domain.getUpdatedAt(),

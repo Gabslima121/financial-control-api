@@ -4,9 +4,9 @@ import { UuidValueObject } from "src/shared/value-object/uuid-value-object.vo";
 import { UserDomainDTO } from "./dto";
 
 export class UserDomain {
-    private readonly userId: UuidValueObject;
-    private readonly userName: string;
-    private readonly userDocument: CpfValueObject | CnpjValueObject;
+    private readonly id: UuidValueObject;
+    private readonly name: string;
+    private readonly document: CpfValueObject | CnpjValueObject;
     private readonly email: string;
     private readonly password: string;
     private readonly createdAt: Date | null;
@@ -14,11 +14,11 @@ export class UserDomain {
     private isActive: boolean;
 
     private constructor(props: UserDomainDTO) {
-        const document = this.createDocument(props.userDocument);
+        const document = this.createDocument(props.document);
 
-        this.userId = props.userId ? new UuidValueObject(props.userId) : new UuidValueObject();
-        this.userName = props.userName;
-        this.userDocument = document;
+        this.id = props.id ? new UuidValueObject(props.id) : new UuidValueObject();
+        this.name = props.name;
+        this.document = document;
         this.email = props.email;
         this.password = props.password;
         this.createdAt = props.createdAt || new Date();
@@ -37,16 +37,16 @@ export class UserDomain {
             : new CpfValueObject(document);
     }
 
-    public getUserId(): string {
-        return this.userId.getValue();
+    public getId(): string {
+        return this.id.getValue();
     }
 
-    public getUserName(): string {
-        return this.userName;
+    public getName(): string {
+        return this.name;
     }
 
-    public getUserDocument(): string {
-        return this.userDocument.getValue();
+    public getDocument(): string {
+        return this.document.getValue();
     }
 
     public getEmail(): string {
