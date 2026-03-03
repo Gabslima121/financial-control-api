@@ -16,8 +16,8 @@ export class CreateUserUseCase {
 
         const userDomainToCreate = UserDomainAdapter.toDomain({
             email: userDto.email,
-            userName: userDto.name,
-            userDocument: userDto.document,
+            name: userDto.name,
+            document: userDto.document,
             password: encryptedPassword,
             isActive: true,
         });

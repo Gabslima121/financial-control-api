@@ -2,8 +2,6 @@ import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { JwtTokenValidatorRepository } from '../adapters/auth/out/jwt-token-validator.repository';
 import { AuthMiddleware } from './utils/middlewares/auth.middleware';
 import { UserModule } from './user/user.module';
-import { TransactionModule } from './transactions/transaction.module';
-import { AccountBalanceModule } from './account-balance/account-balance.module';
 
 @Module({
   providers: [
@@ -11,8 +9,6 @@ import { AccountBalanceModule } from './account-balance/account-balance.module';
   ],
   imports: [
     UserModule,
-    TransactionModule,
-    AccountBalanceModule
   ],
 })
 export class AppModule {

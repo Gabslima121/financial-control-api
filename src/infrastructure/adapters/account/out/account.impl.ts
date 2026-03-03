@@ -4,6 +4,8 @@ import { AccountDomain } from "src/core/domain/account/account.domain";
 import { AccountPort } from "src/core/port/account.port";
 import { AccountDomainAdapter } from "../in/account.adapter";
 
+import { UserDomainAdapter } from "src/infrastructure/adapters/user/in/user.adapter";
+
 @Injectable()
 export class AccountRepository implements AccountPort {
     constructor(private readonly prisma: PrismaClient) {}
@@ -24,6 +26,7 @@ export class AccountRepository implements AccountPort {
     async findById(id: string): Promise<AccountDomain | null> {
         const account = await this.prisma.account.findUnique({
             where: { id },
+            include: { user: true },
         });
 
         if (!account) {
@@ -33,9 +36,19 @@ export class AccountRepository implements AccountPort {
         return AccountDomainAdapter.toDomain({
             id: account.id,
             userId: account.userId,
+            user: account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+                id: account.user.id,
+                name: account.user.name,
+                document: account.user.document,
+                email: account.user.email,
+                password: account.user.password,
+                createdAt: account.user.createdAt,
+                updatedAt: account.user.updatedAt,
+                isActive: account.user.isActive,
+            })) : null,
             name: account.name,
             bankName: account.bankName,
-            initialBalance: account.initialBalance.toNumber(),
+            initialBalance: Number(account.initialBalance),
             createdAt: account.createdAt,
         });
     }
@@ -43,15 +56,26 @@ export class AccountRepository implements AccountPort {
     async listAccountsByUserId(userId: string): Promise<AccountDomain[]> {
         const accounts = await this.prisma.account.findMany({
             where: { userId },
+            include: { user: true },
         });
 
         return accounts.map((account) =>
             AccountDomainAdapter.toDomain({
                 id: account.id,
                 userId: account.userId,
+                user: account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+                    id: account.user.id,
+                    name: account.user.name,
+                    document: account.user.document,
+                    email: account.user.email,
+                    password: account.user.password,
+                    createdAt: account.user.createdAt,
+                    updatedAt: account.user.updatedAt,
+                    isActive: account.user.isActive,
+                })) : null,
                 name: account.name,
                 bankName: account.bankName,
-                initialBalance: account.initialBalance.toNumber(),
+                initialBalance: Number(account.initialBalance),
                 createdAt: account.createdAt,
             })
         );
