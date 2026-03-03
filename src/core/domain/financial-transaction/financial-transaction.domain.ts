@@ -10,18 +10,18 @@ export class FinancialTransactionDomain {
     private readonly accountId: UuidValueObject;
     private readonly account: AccountDomain | null;
     private readonly type: TransactionType;
-    private readonly status: TransactionStatus;
+    private status: TransactionStatus;
     private readonly amount: number;
     private readonly description: string | null;
     private readonly paymentMethod: PaymentMethod | null;
     private readonly dueDate: Date | null;
-    private readonly paidAt: Date | null;
+    private paidAt: Date | null;
     private readonly installments: number;
     private readonly installment: number;
-    private readonly bankStatementId: UuidValueObject | null;
+    private bankStatementId: UuidValueObject | null;
     private readonly bankStatement: BankStatementTransactionDomain | null;
     private readonly createdAt: Date | null;
-    private readonly updatedAt: Date | null;
+    private updatedAt: Date | null;
 
     private constructor(props: FinancialTransactionDomainDTO) {
         this.id = props.id ? new UuidValueObject(props.id) : new UuidValueObject();
@@ -108,5 +108,12 @@ export class FinancialTransactionDomain {
 
     public getUpdatedAt(): Date | null {
         return this.updatedAt;
+    }
+
+    public confirmPayment(bankStatementId: string, paidAt: Date): void {
+        this.status = TransactionStatus.PAID;
+        this.paidAt = paidAt;
+        this.bankStatementId = new UuidValueObject(bankStatementId);
+        this.updatedAt = new Date();
     }
 }

@@ -5,9 +5,14 @@ import { CreateBankStatementTransactionUseCase } from "src/application/bank-stat
 import { PrismaProvider } from "../utils/providers/prisma.provider";
 import { AccountModule } from "../account/account.module";
 import { AccountRepository } from "src/infrastructure/adapters/account/out/account.impl";
+import { FinancialTransactionModule } from "../financial-transaction/financial-transaction.module";
+import { FinancialTransactionRepository } from "src/infrastructure/adapters/financial-transaction/out/financial-transaction.impl";
 
 @Module({
-    imports: [forwardRef(() => AccountModule)],
+    imports: [
+        forwardRef(() => AccountModule),
+        FinancialTransactionModule,
+    ],
     providers: [
         PrismaProvider,
         {
@@ -16,10 +21,18 @@ import { AccountRepository } from "src/infrastructure/adapters/account/out/accou
         },
         {
             provide: CreateBankStatementTransactionUseCase,
-            useFactory: (bankStatementTransactionRepository: BankStatementTransactionRepository, accountRepository: AccountRepository) => {
-                return new CreateBankStatementTransactionUseCase(bankStatementTransactionRepository, accountRepository);
+            useFactory: (
+                bankStatementTransactionRepository: BankStatementTransactionRepository,
+                accountRepository: AccountRepository,
+                financialTransactionRepository: FinancialTransactionRepository
+            ) => {
+                return new CreateBankStatementTransactionUseCase(
+                    bankStatementTransactionRepository,
+                    accountRepository,
+                    financialTransactionRepository
+                );
             },
-            inject: ['BankStatementTransactionPort', 'AccountPort'],
+            inject: ['BankStatementTransactionPort', 'AccountPort', 'FinancialTransactionPort'],
         }
     ],
     controllers: [BankStatementTransactionController],

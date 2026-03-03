@@ -4,6 +4,7 @@ import { AuthMiddleware } from './utils/middlewares/auth.middleware';
 import { UserModule } from './user/user.module';
 import { AccountModule } from './account/account.module';
 import { BankStatementTransactionModule } from './bank-statement-transaction/bank-statement-transaction.module';
+import { FinancialTransactionModule } from './financial-transaction/financial-transaction.module';
 
 @Module({
   providers: [
@@ -13,6 +14,7 @@ import { BankStatementTransactionModule } from './bank-statement-transaction/ban
     UserModule,
     AccountModule,
     BankStatementTransactionModule,
+    FinancialTransactionModule,
   ],
 })
 export class AppModule {

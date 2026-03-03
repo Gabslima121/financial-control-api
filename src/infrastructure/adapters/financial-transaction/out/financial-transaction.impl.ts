@@ -112,7 +112,6 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
     async listByAccountId(accountId: string): Promise<FinancialTransactionDomain[]> {
         const transactions = await this.prisma.financialTransaction.findMany({
             where: { accountId },
-            orderBy: { createdAt: "desc" },
             include: {
                 account: { include: { user: true } },
                 bankStatement: { include: { account: { include: { user: true } } } },
@@ -187,17 +186,10 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
         await this.prisma.financialTransaction.update({
             where: { id: transaction.getId() },
             data: {
-                type: transaction.getType() as PrismaTransactionType,
                 status: transaction.getStatus() as PrismaTransactionStatus,
-                amount: transaction.getAmount(),
-                description: transaction.getDescription(),
-                paymentMethod: transaction.getPaymentMethod() as PrismaPaymentMethod,
-                dueDate: transaction.getDueDate(),
                 paidAt: transaction.getPaidAt(),
-                installments: transaction.getInstallments(),
-                installment: transaction.getInstallment(),
                 bankStatementId: transaction.getBankStatementId(),
-                updatedAt: transaction.getUpdatedAt()!,
+                updatedAt: new Date(),
             },
         });
     }
@@ -205,6 +197,95 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
     async delete(id: string): Promise<void> {
         await this.prisma.financialTransaction.delete({
             where: { id },
+        });
+    }
+
+    async findMatchingTransaction(
+        accountId: string,
+        amount: number,
+        dateRange: { start: Date; end: Date },
+    ): Promise<FinancialTransactionDomain | null> {
+        const transaction = await this.prisma.financialTransaction.findFirst({
+            where: {
+                accountId,
+                amount: Math.abs(amount), // Assuming financial transaction amount is positive for comparison
+                status: PrismaTransactionStatus.pending,
+                paidAt: null,
+                bankStatementId: null,
+                dueDate: {
+                    gte: dateRange.start,
+                    lte: dateRange.end,
+                },
+            },
+            include: {
+                account: { include: { user: true } },
+                bankStatement: { include: { account: { include: { user: true } } } },
+            },
+        });
+
+        if (!transaction) {
+            return null;
+        }
+
+        return FinancialTransactionAdapter.toDomain({
+            id: transaction.id,
+            accountId: transaction.accountId,
+            account: transaction.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
+                id: transaction.account.id,
+                name: transaction.account.name,
+                bankName: transaction.account.bankName,
+                initialBalance: Number(transaction.account.initialBalance),
+                createdAt: transaction.account.createdAt,
+                user: transaction.account.user ? UserDomainAdapter.toDomain({
+                    id: transaction.account.user.id,
+                    name: transaction.account.user.name,
+                    document: transaction.account.user.document,
+                    email: transaction.account.user.email,
+                    password: transaction.account.user.password,
+                    createdAt: transaction.account.user.createdAt,
+                    updatedAt: transaction.account.user.updatedAt,
+                    isActive: transaction.account.user.isActive,
+                }) : null,
+            })) : null,
+            type: transaction.type as TransactionType,
+            status: transaction.status as TransactionStatus,
+            amount: Number(transaction.amount),
+            description: transaction.description,
+            paymentMethod: transaction.paymentMethod as PaymentMethod,
+            dueDate: transaction.dueDate,
+            paidAt: transaction.paidAt,
+            installments: transaction.installments,
+            installment: transaction.installment,
+            bankStatementId: transaction.bankStatementId,
+            bankStatement: transaction.bankStatement ? BankStatementTransactionAdapter.toDTO(BankStatementTransactionAdapter.toDomain({
+                id: transaction.bankStatement.id,
+                accountId: transaction.bankStatement.accountId,
+                account: transaction.bankStatement.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
+                    id: transaction.bankStatement.account.id,
+                    name: transaction.bankStatement.account.name,
+                    bankName: transaction.bankStatement.account.bankName,
+                    initialBalance: Number(transaction.bankStatement.account.initialBalance),
+                    createdAt: transaction.bankStatement.account.createdAt,
+                    user: transaction.bankStatement.account.user ? UserDomainAdapter.toDomain({
+                        id: transaction.bankStatement.account.user.id,
+                        name: transaction.bankStatement.account.user.name,
+                        document: transaction.bankStatement.account.user.document,
+                        email: transaction.bankStatement.account.user.email,
+                        password: transaction.bankStatement.account.user.password,
+                        createdAt: transaction.bankStatement.account.user.createdAt,
+                        updatedAt: transaction.bankStatement.account.user.updatedAt,
+                        isActive: transaction.bankStatement.account.user.isActive,
+                    }) : null,
+                })) : null,
+                fitId: transaction.bankStatement.fitId,
+                amount: Number(transaction.bankStatement.amount),
+                postedAt: transaction.bankStatement.postedAt,
+                description: transaction.bankStatement.description,
+                rawType: transaction.bankStatement.rawType,
+                createdAt: transaction.bankStatement.createdAt,
+            })) : null,
+            createdAt: transaction.createdAt,
+            updatedAt: transaction.updatedAt,
         });
     }
 }

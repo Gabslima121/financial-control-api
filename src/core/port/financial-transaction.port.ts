@@ -6,4 +6,5 @@ export interface FinancialTransactionPort {
     listByAccountId(accountId: string): Promise<FinancialTransactionDomain[]>;
     update(transaction: FinancialTransactionDomain): Promise<void>;
     delete(id: string): Promise<void>;
+    findMatchingTransaction(accountId: string, amount: number, dateRange: { start: Date; end: Date }): Promise<FinancialTransactionDomain | null>;
 }
