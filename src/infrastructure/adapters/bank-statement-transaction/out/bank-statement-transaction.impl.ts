@@ -11,6 +11,15 @@ import { UserDomainAdapter } from "src/infrastructure/adapters/user/in/user.adap
 export class BankStatementTransactionRepository implements BankStatementTransactionPort {
     constructor(private readonly prisma: PrismaClient) {}
 
+    async sumAmountByAccountId(accountId: string): Promise<number> {
+        const sum = await this.prisma.bankStatementTransaction.aggregate({
+            where: { accountId },
+            _sum: { amount: true },
+        });
+
+        return Number(sum._sum.amount || 0);
+    }
+
     async create(transaction: BankStatementTransactionDomain): Promise<void> {
         await this.prisma.bankStatementTransaction.create({
             data: {

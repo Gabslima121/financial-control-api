@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { BankStatementTransactionController } from "./bank-statement-transaction.controller";
 import { BankStatementTransactionRepository } from "src/infrastructure/adapters/bank-statement-transaction/out/bank-statement-transaction.impl";
 import { CreateBankStatementTransactionUseCase } from "src/application/bank-statement-transaction/create-bank-statement-transaction.use-case";
@@ -7,7 +7,7 @@ import { AccountModule } from "../account/account.module";
 import { AccountRepository } from "src/infrastructure/adapters/account/out/account.impl";
 
 @Module({
-    imports: [AccountModule],
+    imports: [forwardRef(() => AccountModule)],
     providers: [
         PrismaProvider,
         {
@@ -23,5 +23,6 @@ import { AccountRepository } from "src/infrastructure/adapters/account/out/accou
         }
     ],
     controllers: [BankStatementTransactionController],
+    exports: ['BankStatementTransactionPort'],
 })
 export class BankStatementTransactionModule {}
