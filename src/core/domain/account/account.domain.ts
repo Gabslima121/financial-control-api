@@ -5,7 +5,6 @@ import { UserDomainAdapter } from "src/infrastructure/adapters/user/in/user.adap
 
 export class AccountDomain {
     private readonly id: UuidValueObject;
-    private readonly userId: UuidValueObject;
     private readonly user: UserDomain | null;
     private readonly name: string;
     private readonly bankName: string | null;
@@ -14,8 +13,7 @@ export class AccountDomain {
 
     private constructor(props: AccountDomainDTO) {
         this.id = props.id ? new UuidValueObject(props.id) : new UuidValueObject();
-        this.userId = new UuidValueObject(props.userId);
-        this.user = props.user ? UserDomainAdapter.toDomain(props.user) : null;
+        this.user = props.user ? (props.user) : null;
         this.name = props.name;
         this.bankName = props.bankName;
         this.initialBalance = props.initialBalance;
@@ -28,10 +26,6 @@ export class AccountDomain {
 
     public getId(): string {
         return this.id.getValue();
-    }
-
-    public getUserId(): string {
-        return this.userId.getValue();
     }
 
     public getUser(): UserDomain | null {

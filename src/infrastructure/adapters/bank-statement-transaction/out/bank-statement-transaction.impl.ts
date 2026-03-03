@@ -46,12 +46,11 @@ export class BankStatementTransactionRepository implements BankStatementTransact
             accountId: transaction.accountId,
             account: transaction.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
                 id: transaction.account.id,
-                userId: transaction.account.userId,
                 name: transaction.account.name,
                 bankName: transaction.account.bankName,
                 initialBalance: Number(transaction.account.initialBalance),
                 createdAt: transaction.account.createdAt,
-                user: transaction.account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+                user: transaction.account.user ? UserDomainAdapter.toDomain({
                     id: transaction.account.user.id,
                     name: transaction.account.user.name,
                     document: transaction.account.user.document,
@@ -60,7 +59,7 @@ export class BankStatementTransactionRepository implements BankStatementTransact
                     createdAt: transaction.account.user.createdAt,
                     updatedAt: transaction.account.user.updatedAt,
                     isActive: transaction.account.user.isActive,
-                })) : null,
+                }) : null,
             })) : null,
             fitId: transaction.fitId,
             amount: Number(transaction.amount),
@@ -84,12 +83,11 @@ export class BankStatementTransactionRepository implements BankStatementTransact
                 accountId: transaction.accountId,
                 account: transaction.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
                     id: transaction.account.id,
-                    userId: transaction.account.userId,
                     name: transaction.account.name,
                     bankName: transaction.account.bankName,
                     initialBalance: Number(transaction.account.initialBalance),
                     createdAt: transaction.account.createdAt,
-                    user: transaction.account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+                    user: transaction.account.user ? UserDomainAdapter.toDomain({
                         id: transaction.account.user.id,
                         name: transaction.account.user.name,
                         document: transaction.account.user.document,
@@ -98,7 +96,7 @@ export class BankStatementTransactionRepository implements BankStatementTransact
                         createdAt: transaction.account.user.createdAt,
                         updatedAt: transaction.account.user.updatedAt,
                         isActive: transaction.account.user.isActive,
-                    })) : null,
+                    }) : null,
                 })) : null,
                 fitId: transaction.fitId,
                 amount: Number(transaction.amount),

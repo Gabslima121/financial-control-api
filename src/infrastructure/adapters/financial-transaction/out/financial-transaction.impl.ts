@@ -52,12 +52,11 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
             accountId: transaction.accountId,
             account: transaction.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
                 id: transaction.account.id,
-                userId: transaction.account.userId,
                 name: transaction.account.name,
                 bankName: transaction.account.bankName,
                 initialBalance: Number(transaction.account.initialBalance),
                 createdAt: transaction.account.createdAt,
-                user: transaction.account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+                user: transaction.account.user ? UserDomainAdapter.toDomain({
                     id: transaction.account.user.id,
                     name: transaction.account.user.name,
                     document: transaction.account.user.document,
@@ -66,7 +65,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                     createdAt: transaction.account.user.createdAt,
                     updatedAt: transaction.account.user.updatedAt,
                     isActive: transaction.account.user.isActive,
-                })) : null,
+                }) : null,
             })) : null,
             type: transaction.type as TransactionType,
             status: transaction.status as TransactionStatus,
@@ -83,12 +82,11 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                 accountId: transaction.bankStatement.accountId,
                 account: transaction.bankStatement.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
                     id: transaction.bankStatement.account.id,
-                    userId: transaction.bankStatement.account.userId,
                     name: transaction.bankStatement.account.name,
                     bankName: transaction.bankStatement.account.bankName,
                     initialBalance: Number(transaction.bankStatement.account.initialBalance),
                     createdAt: transaction.bankStatement.account.createdAt,
-                    user: transaction.bankStatement.account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+                    user: transaction.bankStatement.account.user ? UserDomainAdapter.toDomain({
                         id: transaction.bankStatement.account.user.id,
                         name: transaction.bankStatement.account.user.name,
                         document: transaction.bankStatement.account.user.document,
@@ -97,7 +95,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                         createdAt: transaction.bankStatement.account.user.createdAt,
                         updatedAt: transaction.bankStatement.account.user.updatedAt,
                         isActive: transaction.bankStatement.account.user.isActive,
-                    })) : null,
+                    }) : null,
                 })) : null,
                 fitId: transaction.bankStatement.fitId,
                 amount: Number(transaction.bankStatement.amount),
@@ -127,12 +125,11 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                 accountId: transaction.accountId,
                 account: transaction.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
                     id: transaction.account.id,
-                    userId: transaction.account.userId,
                     name: transaction.account.name,
                     bankName: transaction.account.bankName,
                     initialBalance: Number(transaction.account.initialBalance),
                     createdAt: transaction.account.createdAt,
-                    user: transaction.account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+                    user: transaction.account.user ? UserDomainAdapter.toDomain({
                         id: transaction.account.user.id,
                         name: transaction.account.user.name,
                         document: transaction.account.user.document,
@@ -141,7 +138,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                         createdAt: transaction.account.user.createdAt,
                         updatedAt: transaction.account.user.updatedAt,
                         isActive: transaction.account.user.isActive,
-                    })) : null,
+                    }) : null,
                 })) : null,
                 type: transaction.type as TransactionType,
                 status: transaction.status as TransactionStatus,
@@ -158,12 +155,11 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                     accountId: transaction.bankStatement.accountId,
                     account: transaction.bankStatement.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
                         id: transaction.bankStatement.account.id,
-                        userId: transaction.bankStatement.account.userId,
                         name: transaction.bankStatement.account.name,
                         bankName: transaction.bankStatement.account.bankName,
                         initialBalance: Number(transaction.bankStatement.account.initialBalance),
                         createdAt: transaction.bankStatement.account.createdAt,
-                        user: transaction.bankStatement.account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+                        user: transaction.bankStatement.account.user ? UserDomainAdapter.toDomain({
                             id: transaction.bankStatement.account.user.id,
                             name: transaction.bankStatement.account.user.name,
                             document: transaction.bankStatement.account.user.document,
@@ -172,7 +168,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                             createdAt: transaction.bankStatement.account.user.createdAt,
                             updatedAt: transaction.bankStatement.account.user.updatedAt,
                             isActive: transaction.bankStatement.account.user.isActive,
-                        })) : null,
+                        }) : null,
                     })) : null,
                     fitId: transaction.bankStatement.fitId,
                     amount: Number(transaction.bankStatement.amount),

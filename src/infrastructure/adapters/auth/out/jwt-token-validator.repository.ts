@@ -7,9 +7,7 @@ import { UnauthorizedException } from '../../../../shared/errors/custom.exceptio
 @Injectable()
 export class JwtTokenValidatorRepository implements TokenValidatorPort {
   async createToken(payload: any): Promise<string> {
-    return jwt.sign(payload, process.env.JWT_SECRET as string, {
-      expiresIn: '1h',
-    });
+    return jwt.sign(payload, process.env.JWT_SECRET as string);
   }
 
   async validateToken(token: string): Promise<any> {

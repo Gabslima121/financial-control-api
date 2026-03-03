@@ -10,8 +10,7 @@ export class AccountDomainAdapter {
     public static toDTO(domain: AccountDomain): AccountDomainDTO {
         return {
             id: domain.getId(),
-            userId: domain.getUserId(),
-            user: domain.getUser() ? UserDomainAdapter.toDTO(domain.getUser()!) : null,
+            user: domain.getUser() ? domain.getUser() : null,
             name: domain.getName(),
             bankName: domain.getBankName(),
             initialBalance: domain.getInitialBalance(),

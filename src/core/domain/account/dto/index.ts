@@ -1,9 +1,9 @@
 import { UserDomainDTO } from "src/core/domain/user/dto";
+import { UserDomain } from "../../user/user.domain";
 
 export interface AccountDomainDTO {
     id?: string;
-    userId: string;
-    user?: UserDomainDTO | null;
+    user?: UserDomain | null;
     name: string;
     bankName: string | null;
     initialBalance: number;

@@ -14,7 +14,7 @@ export class AccountRepository implements AccountPort {
         await this.prisma.account.create({
             data: {
                 id: account.getId(),
-                userId: account.getUserId(),
+                userId: account.getUser()?.getId()!,
                 name: account.getName(),
                 bankName: account.getBankName(),
                 initialBalance: account.getInitialBalance(),
@@ -35,8 +35,7 @@ export class AccountRepository implements AccountPort {
 
         return AccountDomainAdapter.toDomain({
             id: account.id,
-            userId: account.userId,
-            user: account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+            user: account.user ? UserDomainAdapter.toDomain({
                 id: account.user.id,
                 name: account.user.name,
                 document: account.user.document,
@@ -45,7 +44,7 @@ export class AccountRepository implements AccountPort {
                 createdAt: account.user.createdAt,
                 updatedAt: account.user.updatedAt,
                 isActive: account.user.isActive,
-            })) : null,
+            }) : null,
             name: account.name,
             bankName: account.bankName,
             initialBalance: Number(account.initialBalance),
@@ -62,8 +61,7 @@ export class AccountRepository implements AccountPort {
         return accounts.map((account) =>
             AccountDomainAdapter.toDomain({
                 id: account.id,
-                userId: account.userId,
-                user: account.user ? UserDomainAdapter.toDTO(UserDomainAdapter.toDomain({
+                user: account.user ? UserDomainAdapter.toDomain({
                     id: account.user.id,
                     name: account.user.name,
                     document: account.user.document,
@@ -72,7 +70,7 @@ export class AccountRepository implements AccountPort {
                     createdAt: account.user.createdAt,
                     updatedAt: account.user.updatedAt,
                     isActive: account.user.isActive,
-                })) : null,
+                }) : null,
                 name: account.name,
                 bankName: account.bankName,
                 initialBalance: Number(account.initialBalance),
