@@ -7,7 +7,6 @@ import { BankStatementTransactionAdapter } from "src/infrastructure/adapters/ban
 
 export class FinancialTransactionDomain {
     private readonly id: UuidValueObject;
-    private readonly accountId: UuidValueObject;
     private readonly account: AccountDomain | null;
     private readonly type: TransactionType;
     private status: TransactionStatus;
@@ -18,15 +17,13 @@ export class FinancialTransactionDomain {
     private paidAt: Date | null;
     private readonly installments: number;
     private readonly installment: number;
-    private bankStatementId: UuidValueObject | null;
     private readonly bankStatement: BankStatementTransactionDomain | null;
     private readonly createdAt: Date | null;
     private updatedAt: Date | null;
 
     private constructor(props: FinancialTransactionDomainDTO) {
         this.id = props.id ? new UuidValueObject(props.id) : new UuidValueObject();
-        this.accountId = new UuidValueObject(props.accountId);
-        this.account = props.account ? AccountDomainAdapter.toDomain(props.account) : null;
+        this.account = props.account ? props.account : null;
         this.type = props.type;
         this.status = props.status;
         this.amount = props.amount;
@@ -36,7 +33,6 @@ export class FinancialTransactionDomain {
         this.paidAt = props.paidAt;
         this.installments = props.installments;
         this.installment = props.installment;
-        this.bankStatementId = props.bankStatementId ? new UuidValueObject(props.bankStatementId) : null;
         this.bankStatement = props.bankStatement ? BankStatementTransactionAdapter.toDomain(props.bankStatement) : null;
         this.createdAt = props.createdAt || new Date();
         this.updatedAt = props.updatedAt || new Date();
@@ -48,10 +44,6 @@ export class FinancialTransactionDomain {
 
     public getId(): string {
         return this.id.getValue();
-    }
-
-    public getAccountId(): string {
-        return this.accountId.getValue();
     }
 
     public getAccount(): AccountDomain | null {
@@ -94,10 +86,6 @@ export class FinancialTransactionDomain {
         return this.installment;
     }
 
-    public getBankStatementId(): string | null {
-        return this.bankStatementId ? this.bankStatementId.getValue() : null;
-    }
-
     public getBankStatement(): BankStatementTransactionDomain | null {
         return this.bankStatement;
     }
@@ -110,10 +98,9 @@ export class FinancialTransactionDomain {
         return this.updatedAt;
     }
 
-    public confirmPayment(bankStatementId: string, paidAt: Date): void {
+    public confirmPayment(paidAt: Date): void {
         this.status = TransactionStatus.PAID;
         this.paidAt = paidAt;
-        this.bankStatementId = new UuidValueObject(bankStatementId);
         this.updatedAt = new Date();
     }
 }

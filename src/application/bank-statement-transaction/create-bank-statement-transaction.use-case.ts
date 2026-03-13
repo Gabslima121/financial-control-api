@@ -97,14 +97,12 @@ export class CreateBankStatementTransactionUseCase {
 
             if (matchingFinancialTransaction) {
                 matchingFinancialTransaction.confirmPayment(
-                    newTransaction.getId(),
                     newTransaction.getPostedAt()
                 );
                 await this.financialTransactionRepository.update(matchingFinancialTransaction);
             } else {
                 const newFinancialTransaction = FinancialTransactionDomain.create({
-                    accountId,
-                    account: AccountDomainAdapter.toDTO(account),
+                    account,
                     type: newTransaction.getAmount() > 0 ? TransactionType.INCOME : TransactionType.EXPENSE,
                     status: TransactionStatus.PAID,
                     amount: Math.abs(newTransaction.getAmount()),
@@ -114,7 +112,6 @@ export class CreateBankStatementTransactionUseCase {
                     paidAt: newTransaction.getPostedAt(),
                     installments: 1,
                     installment: 1,
-                    bankStatementId: newTransaction.getId(),
                 });
                 await this.financialTransactionRepository.create(newFinancialTransaction);
             }

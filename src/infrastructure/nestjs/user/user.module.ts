@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { UserController } from "./user.controller";
 import { UserRepository } from "src/infrastructure/adapters/user/out/user.impl";
 import { PrismaProvider } from "../utils/providers/prisma.provider";
@@ -7,6 +7,8 @@ import { UserPort } from "src/core/port/user.port";
 import { LoginUserUseCase } from "src/application/user/login-user.use-case";
 import { TokenValidatorPort } from "src/core/port/token-validator.port";
 import { JwtTokenValidatorRepository } from "src/infrastructure/adapters/auth/out/jwt-token-validator.repository";
+import { AccountModule } from "../account/account.module";
+import { AccountPort } from "src/core/port/account.port";
 
 @Module({
     providers: [
@@ -26,11 +28,15 @@ import { JwtTokenValidatorRepository } from "src/infrastructure/adapters/auth/ou
         },
         {
             provide: LoginUserUseCase,
-            useFactory: (userPort: UserPort, tokenValidatorPort: TokenValidatorPort) => new LoginUserUseCase(userPort, tokenValidatorPort),
-            inject: ['UserPort', 'TokenValidatorPort'],
+            useFactory: (
+                userPort: UserPort,
+                tokenValidatorPort: TokenValidatorPort,
+                accountPort: AccountPort
+            ) => new LoginUserUseCase(userPort, tokenValidatorPort, accountPort),
+            inject: ['UserPort', 'TokenValidatorPort', 'AccountPort'],
         },
     ],
-    imports: [],
+    imports: [forwardRef(() => AccountModule)],
     controllers: [UserController],
     exports: ['UserPort'],
 })

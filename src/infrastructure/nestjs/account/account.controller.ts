@@ -5,13 +5,15 @@ import { CreateAccountDTO } from "./dto/create-account.dto";
 import { CurrentUser } from "../utils/decorators/user.decorator";
 import { AuthenticatedUser } from "../utils/types/express";
 import { GetCurrentBalanceUseCase } from "src/application/account/get-current-balance.use-case";
+import { ProjectBalanceWithPendingTransactionsUseCase } from "src/application/account/project-balance-with-pending-transactions.use-case";
 
 @ApiTags('Financial Control - Account')
 @Controller('account')
 export class AccountController {
   constructor(
     private readonly createAccountUseCase: CreateAccountUseCase,
-    private readonly getCurrentBalanceUseCase: GetCurrentBalanceUseCase
+    private readonly getCurrentBalanceUseCase: GetCurrentBalanceUseCase,
+    private readonly projectBalanceWithPendingTransactionsUseCase: ProjectBalanceWithPendingTransactionsUseCase,
   ) {}
 
   @Post()
@@ -27,6 +29,15 @@ export class AccountController {
   async getCurrentBalance(@CurrentUser() user: AuthenticatedUser) {
     try {
       return await this.getCurrentBalanceUseCase.execute(user.id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('project-balance-with-pending-transactions')
+  async projectBalanceWithPendingTransactions(@CurrentUser() user: AuthenticatedUser) {
+    try {
+      return await this.projectBalanceWithPendingTransactionsUseCase.execute(user.accountId);
     } catch (error) {
       throw error;
     }

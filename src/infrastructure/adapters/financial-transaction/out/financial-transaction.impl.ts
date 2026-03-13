@@ -13,11 +13,85 @@ import { UserDomainAdapter } from "src/infrastructure/adapters/user/in/user.adap
 export class FinancialTransactionRepository implements FinancialTransactionPort {
     constructor(private readonly prisma: PrismaClient) {}
 
+    async getPendingTransactionsByAccountId(accountId: string): Promise<FinancialTransactionDomain[]> {
+        const transactions = await this.prisma.financialTransaction.findMany({
+            where: {
+                accountId,
+                status: TransactionStatus.PENDING,
+                type: TransactionType.EXPENSE,
+            },
+            include: {
+                account: { include: { user: true } },
+                bankStatement: { include: { account: { include: { user: true } } } },
+            },
+        });
+
+        return transactions.map((transaction) =>
+            FinancialTransactionAdapter.toDomain({
+                id: transaction.id,
+                account: transaction.account ? AccountDomainAdapter.toDomain({
+                    id: transaction.account.id,
+                    name: transaction.account.name,
+                    bankName: transaction.account.bankName,
+                    initialBalance: Number(transaction.account.initialBalance),
+                    createdAt: transaction.account.createdAt,
+                    user: transaction.account.user ? UserDomainAdapter.toDomain({
+                        id: transaction.account.user.id,
+                        name: transaction.account.user.name,
+                        document: transaction.account.user.document,
+                        email: transaction.account.user.email,
+                        password: transaction.account.user.password,
+                        createdAt: transaction.account.user.createdAt,
+                        updatedAt: transaction.account.user.updatedAt,
+                        isActive: transaction.account.user.isActive,
+                    }) : null,
+                }) : null,
+                type: transaction.type as TransactionType,
+                status: transaction.status as TransactionStatus,
+                amount: Number(transaction.amount),
+                description: transaction.description,
+                paymentMethod: transaction.paymentMethod as PaymentMethod,
+                dueDate: transaction.dueDate,
+                paidAt: transaction.paidAt,
+                installments: transaction.installments,
+                installment: transaction.installment,
+                bankStatement: transaction.bankStatement ? BankStatementTransactionAdapter.toDTO(BankStatementTransactionAdapter.toDomain({
+                    id: transaction.bankStatement.id,
+                    accountId: transaction.bankStatement.accountId,
+                    account: transaction.bankStatement.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
+                        id: transaction.bankStatement.account.id,
+                        name: transaction.bankStatement.account.name,
+                        bankName: transaction.bankStatement.account.bankName,
+                        initialBalance: Number(transaction.bankStatement.account.initialBalance),
+                        createdAt: transaction.bankStatement.account.createdAt,
+                        user: transaction.bankStatement.account.user ? UserDomainAdapter.toDomain({
+                            id: transaction.bankStatement.account.user.id,
+                            name: transaction.bankStatement.account.user.name,
+                            document: transaction.bankStatement.account.user.document,
+                            email: transaction.bankStatement.account.user.email,
+                            password: transaction.bankStatement.account.user.password,
+                            createdAt: transaction.bankStatement.account.user.createdAt,
+                            updatedAt: transaction.bankStatement.account.user.updatedAt,
+                            isActive: transaction.bankStatement.account.user.isActive,
+                        }) : null,
+                    })) : null,
+                    fitId: transaction.bankStatement.fitId,
+                    amount: Number(transaction.bankStatement.amount),
+                    postedAt: transaction.bankStatement.postedAt,
+                    description: transaction.bankStatement.description,
+                    rawType: transaction.bankStatement.rawType,
+                    createdAt: transaction.bankStatement.createdAt,
+                })) : null,
+                createdAt: transaction.createdAt,
+                updatedAt: transaction.updatedAt,
+            })
+        );
+    }
+
     async create(transaction: FinancialTransactionDomain): Promise<void> {
         await this.prisma.financialTransaction.create({
             data: {
                 id: transaction.getId(),
-                accountId: transaction.getAccountId(),
                 type: transaction.getType() as PrismaTransactionType,
                 status: transaction.getStatus() as PrismaTransactionStatus,
                 amount: transaction.getAmount(),
@@ -27,7 +101,8 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                 paidAt: transaction.getPaidAt(),
                 installments: transaction.getInstallments(),
                 installment: transaction.getInstallment(),
-                bankStatementId: transaction.getBankStatementId(),
+                accountId: transaction.getAccount()?.getId()!,
+                bankStatementId: transaction.getBankStatement()?.getId()!,
                 createdAt: transaction.getCreatedAt()!,
                 updatedAt: transaction.getUpdatedAt()!,
             },
@@ -49,8 +124,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
 
         return FinancialTransactionAdapter.toDomain({
             id: transaction.id,
-            accountId: transaction.accountId,
-            account: transaction.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
+            account: transaction.account ? AccountDomainAdapter.toDomain({
                 id: transaction.account.id,
                 name: transaction.account.name,
                 bankName: transaction.account.bankName,
@@ -66,7 +140,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                     updatedAt: transaction.account.user.updatedAt,
                     isActive: transaction.account.user.isActive,
                 }) : null,
-            })) : null,
+            }) : null,
             type: transaction.type as TransactionType,
             status: transaction.status as TransactionStatus,
             amount: Number(transaction.amount),
@@ -76,7 +150,6 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
             paidAt: transaction.paidAt,
             installments: transaction.installments,
             installment: transaction.installment,
-            bankStatementId: transaction.bankStatementId,
             bankStatement: transaction.bankStatement ? BankStatementTransactionAdapter.toDTO(BankStatementTransactionAdapter.toDomain({
                 id: transaction.bankStatement.id,
                 accountId: transaction.bankStatement.accountId,
@@ -121,8 +194,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
         return transactions.map((transaction) =>
             FinancialTransactionAdapter.toDomain({
                 id: transaction.id,
-                accountId: transaction.accountId,
-                account: transaction.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
+                account: transaction.account ? AccountDomainAdapter.toDomain({
                     id: transaction.account.id,
                     name: transaction.account.name,
                     bankName: transaction.account.bankName,
@@ -138,7 +210,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                         updatedAt: transaction.account.user.updatedAt,
                         isActive: transaction.account.user.isActive,
                     }) : null,
-                })) : null,
+                }) : null,
                 type: transaction.type as TransactionType,
                 status: transaction.status as TransactionStatus,
                 amount: Number(transaction.amount),
@@ -148,7 +220,6 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                 paidAt: transaction.paidAt,
                 installments: transaction.installments,
                 installment: transaction.installment,
-                bankStatementId: transaction.bankStatementId,
                 bankStatement: transaction.bankStatement ? BankStatementTransactionAdapter.toDTO(BankStatementTransactionAdapter.toDomain({
                     id: transaction.bankStatement.id,
                     accountId: transaction.bankStatement.accountId,
@@ -188,7 +259,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
             data: {
                 status: transaction.getStatus() as PrismaTransactionStatus,
                 paidAt: transaction.getPaidAt(),
-                bankStatementId: transaction.getBankStatementId(),
+                bankStatementId: transaction.getBankStatement()?.getId(),
                 updatedAt: new Date(),
             },
         });
@@ -229,8 +300,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
 
         return FinancialTransactionAdapter.toDomain({
             id: transaction.id,
-            accountId: transaction.accountId,
-            account: transaction.account ? AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain({
+            account: transaction.account ? AccountDomainAdapter.toDomain({
                 id: transaction.account.id,
                 name: transaction.account.name,
                 bankName: transaction.account.bankName,
@@ -246,7 +316,7 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
                     updatedAt: transaction.account.user.updatedAt,
                     isActive: transaction.account.user.isActive,
                 }) : null,
-            })) : null,
+            }) : null,
             type: transaction.type as TransactionType,
             status: transaction.status as TransactionStatus,
             amount: Number(transaction.amount),
@@ -256,7 +326,6 @@ export class FinancialTransactionRepository implements FinancialTransactionPort 
             paidAt: transaction.paidAt,
             installments: transaction.installments,
             installment: transaction.installment,
-            bankStatementId: transaction.bankStatementId,
             bankStatement: transaction.bankStatement ? BankStatementTransactionAdapter.toDTO(BankStatementTransactionAdapter.toDomain({
                 id: transaction.bankStatement.id,
                 accountId: transaction.bankStatement.accountId,

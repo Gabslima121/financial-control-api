@@ -7,4 +7,5 @@ export interface FinancialTransactionPort {
     update(transaction: FinancialTransactionDomain): Promise<void>;
     delete(id: string): Promise<void>;
     findMatchingTransaction(accountId: string, amount: number, dateRange: { start: Date; end: Date }): Promise<FinancialTransactionDomain | null>;
+    getPendingTransactionsByAccountId(accountId: string): Promise<FinancialTransactionDomain[]>;
 }

@@ -1,7 +1,5 @@
 import { AccountPort } from "src/core/port/account.port";
 import { BankStatementTransactionPort } from "src/core/port/bank-statement-transaction.port";
-import { UserPort } from "src/core/port/user.port";
-import { AccountRepository } from "src/infrastructure/adapters/account/out/account.impl";
 
 export class GetCurrentBalanceUseCase {
     constructor(

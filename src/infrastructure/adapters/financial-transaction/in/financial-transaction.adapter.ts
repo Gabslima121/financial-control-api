@@ -11,8 +11,7 @@ export class FinancialTransactionAdapter {
     public static toDTO(domain: FinancialTransactionDomain): FinancialTransactionDomainDTO {
         return {
             id: domain.getId(),
-            accountId: domain.getAccountId(),
-            account: domain.getAccount() ? AccountDomainAdapter.toDTO(domain.getAccount()!) : null,
+            account: domain.getAccount() ? domain.getAccount()! : null,
             type: domain.getType(),
             status: domain.getStatus(),
             amount: domain.getAmount(),
@@ -22,7 +21,6 @@ export class FinancialTransactionAdapter {
             paidAt: domain.getPaidAt(),
             installments: domain.getInstallments(),
             installment: domain.getInstallment(),
-            bankStatementId: domain.getBankStatementId(),
             bankStatement: domain.getBankStatement() ? BankStatementTransactionAdapter.toDTO(domain.getBankStatement()!) : null,
             createdAt: domain.getCreatedAt(),
             updatedAt: domain.getUpdatedAt(),

@@ -8,12 +8,16 @@ import { UserRepository } from "src/infrastructure/adapters/user/out/user.impl";
 import { GetCurrentBalanceUseCase } from "src/application/account/get-current-balance.use-case";
 import { BankStatementTransactionRepository } from "src/infrastructure/adapters/bank-statement-transaction/out/bank-statement-transaction.impl";
 import { BankStatementTransactionModule } from "../bank-statement-transaction/bank-statement-transaction.module";
+import { ProjectBalanceWithPendingTransactionsUseCase } from "src/application/account/project-balance-with-pending-transactions.use-case";
+import { FinancialTransactionModule } from "../financial-transaction/financial-transaction.module";
+import { FinancialTransactionRepository } from "src/infrastructure/adapters/financial-transaction/out/financial-transaction.impl";
 
 
 @Module({
     imports: [
-        UserModule,
-        forwardRef(() => BankStatementTransactionModule)
+        forwardRef(() => UserModule),
+        forwardRef(() => BankStatementTransactionModule),
+        forwardRef(() => FinancialTransactionModule),
     ],
     controllers: [AccountController],
     providers: [
@@ -34,7 +38,15 @@ import { BankStatementTransactionModule } from "../bank-statement-transaction/ba
                 bankStatementTransactionRepository: BankStatementTransactionRepository
             ) => new GetCurrentBalanceUseCase(accountRepository, bankStatementTransactionRepository),
             inject: ['AccountPort', 'BankStatementTransactionPort'],
-        }
+        },
+        {
+            provide: ProjectBalanceWithPendingTransactionsUseCase,
+            useFactory: (
+                getCurrentBalanceUseCase: GetCurrentBalanceUseCase,
+                financialTransactionRepository: FinancialTransactionRepository,
+            ) => new ProjectBalanceWithPendingTransactionsUseCase(getCurrentBalanceUseCase, financialTransactionRepository),
+            inject: [GetCurrentBalanceUseCase, 'FinancialTransactionPort'],
+        },
     ],
     exports: ['AccountPort'],
 })

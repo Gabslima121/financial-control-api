@@ -1,5 +1,6 @@
 import { AccountDomainDTO } from "src/core/domain/account/dto";
 import { BankStatementTransactionDomainDTO } from "src/core/domain/bank-statement-transaction/dto";
+import { AccountDomain } from "../../account/account.domain";
 
 export enum TransactionType {
     INCOME = "income",
@@ -23,8 +24,7 @@ export enum PaymentMethod {
 
 export interface FinancialTransactionDomainDTO {
     id?: string;
-    accountId: string;
-    account?: AccountDomainDTO | null;
+    account?: AccountDomain | null;
     type: TransactionType;
     status: TransactionStatus;
     amount: number;
@@ -34,7 +34,6 @@ export interface FinancialTransactionDomainDTO {
     paidAt: Date | null;
     installments: number;
     installment: number;
-    bankStatementId?: string | null;
     bankStatement?: BankStatementTransactionDomainDTO | null;
     createdAt?: Date | null;
     updatedAt?: Date | null;
