@@ -6,16 +6,33 @@ import { UnauthorizedException } from '../../../../shared/errors/custom.exceptio
 
 @Injectable()
 export class JwtTokenValidatorRepository implements TokenValidatorPort {
-  async createToken(payload: any): Promise<string> {
-    return jwt.sign(payload, process.env.JWT_SECRET as string);
+  createToken(payload: any): Promise<string> {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new UnauthorizedException('JWT secret not configured');
+    }
+
+    const signPayload: string | object | Buffer =
+      typeof payload === 'string' || Buffer.isBuffer(payload)
+        ? payload
+        : typeof payload === 'object' && payload !== null
+          ? (payload as object)
+          : {};
+
+    return Promise.resolve(jwt.sign(signPayload, secret));
   }
 
-  async validateToken(token: string): Promise<any> {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+  validateToken(token: string): Promise<any> {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new UnauthorizedException('JWT secret not configured');
+    }
 
-      return decoded;
-    } catch (error) {
+    try {
+      const decoded = jwt.verify(token, secret);
+
+      return Promise.resolve(decoded);
+    } catch {
       throw new UnauthorizedException('Invalid token');
     }
   }

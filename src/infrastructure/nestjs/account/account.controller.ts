@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { CreateAccountUseCase } from "src/application/account/create-account.use-case";
-import { CreateAccountDTO } from "./dto/create-account.dto";
-import { CurrentUser } from "../utils/decorators/user.decorator";
-import { AuthenticatedUser } from "../utils/types/express";
-import { GetCurrentBalanceUseCase } from "src/application/account/get-current-balance.use-case";
-import { ProjectBalanceWithPendingTransactionsUseCase } from "src/application/account/project-balance-with-pending-transactions.use-case";
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { CreateAccountUseCase } from 'src/application/account/create-account.use-case';
+import { CreateAccountDTO } from './dto/create-account.dto';
+import { CurrentUser } from '../utils/decorators/user.decorator';
+import { AuthenticatedUser } from '../utils/types/express';
+import { GetCurrentBalanceUseCase } from 'src/application/account/get-current-balance.use-case';
+import { ProjectBalanceWithPendingTransactionsUseCase } from 'src/application/account/project-balance-with-pending-transactions.use-case';
 
 @ApiTags('Financial Control - Account')
 @Controller('account')
@@ -17,29 +17,24 @@ export class AccountController {
   ) {}
 
   @Post()
-  async createAccount(@Body() createAccountDto: CreateAccountDTO, @CurrentUser() user: AuthenticatedUser) {
-    try {
-      return await this.createAccountUseCase.execute(createAccountDto, user.id);
-    } catch (error) {
-      throw error;
-    }
+  async createAccount(
+    @Body() createAccountDto: CreateAccountDTO,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return await this.createAccountUseCase.execute(createAccountDto, user.id);
   }
 
   @Get('current-balance')
   async getCurrentBalance(@CurrentUser() user: AuthenticatedUser) {
-    try {
-      return await this.getCurrentBalanceUseCase.execute(user.id);
-    } catch (error) {
-      throw error;
-    }
+    return await this.getCurrentBalanceUseCase.execute(user.accountId);
   }
 
   @Get('project-balance-with-pending-transactions')
-  async projectBalanceWithPendingTransactions(@CurrentUser() user: AuthenticatedUser) {
-    try {
-      return await this.projectBalanceWithPendingTransactionsUseCase.execute(user.accountId);
-    } catch (error) {
-      throw error;
-    }
+  async projectBalanceWithPendingTransactions(
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return await this.projectBalanceWithPendingTransactionsUseCase.execute(
+      user.accountId,
+    );
   }
 }

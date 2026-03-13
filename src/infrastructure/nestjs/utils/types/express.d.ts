@@ -4,7 +4,6 @@ export interface AuthenticatedUser {
   sub: string;
   id: string;
   accountId: string;
-  [key: string]: any;
 }
 
 declare global {
