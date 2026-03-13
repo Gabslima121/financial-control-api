@@ -27,6 +27,10 @@ enum PaymentMethod {
   other
 }
 
+enum RecurrenceFrequency {
+  monthly
+}
+
 model User {
   id        String   @id @default(uuid()) @db.Uuid
   name      String   @db.VarChar(255)
@@ -89,6 +93,11 @@ model FinancialTransaction {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
+  recurrenceGroupId     String?             @db.Uuid
+  recurrenceFrequency   RecurrenceFrequency?
+  recurrenceInterval    Int?
+  recurrenceDayOfMonth  Int?
+
   account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   bankStatementId String? @unique @db.Uuid
@@ -96,4 +105,6 @@ model FinancialTransaction {
 
   @@index([accountId, paidAt])
   @@index([status])
+  @@index([recurrenceGroupId])
+  @@unique([recurrenceGroupId, dueDate])
 }
