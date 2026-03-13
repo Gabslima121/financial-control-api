@@ -108,3 +108,9 @@ model FinancialTransaction {
   @@index([recurrenceGroupId])
   @@unique([recurrenceGroupId, dueDate])
 }
+
+model Person {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
+}

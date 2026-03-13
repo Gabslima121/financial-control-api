@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { AccountModule } from './account/account.module';
 import { BankStatementTransactionModule } from './bank-statement-transaction/bank-statement-transaction.module';
 import { FinancialTransactionModule } from './financial-transaction/financial-transaction.module';
+import { PersonModule } from './person/person.module';
 
 @Module({
   providers: [
@@ -15,6 +16,7 @@ import { FinancialTransactionModule } from './financial-transaction/financial-tr
     AccountModule,
     BankStatementTransactionModule,
     FinancialTransactionModule,
+    PersonModule
   ],
 })
 export class AppModule {
