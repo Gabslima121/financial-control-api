@@ -2,5 +2,6 @@ import { PersonDomain } from "../domain/person/person.domain";
 
 export interface PersonPort {
     createPerson(personInformation: PersonDomain): Promise<void>;
-    listPerson(): Promise<PersonDomain[]>;
+    listPeople(): Promise<PersonDomain[]>;
+    findPersonById(id: string): Promise<PersonDomain>;
 }

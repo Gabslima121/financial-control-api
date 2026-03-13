@@ -7,6 +7,24 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export class PersonImpl implements PersonPort {
     constructor(private readonly prisma: PrismaClient) {}
+    
+    async findPersonById(id: string): Promise<PersonDomain> {
+        const person = await this.prisma.person.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        if (!person) {
+            throw new Error('Person not found');
+        }
+
+        return PersonAdapter.toDomain({
+            id: person.id,
+            name: person.name,
+            email: person.email,
+        });
+    }
 
     async createPerson(personInformation: PersonDomain): Promise<void> {
         await this.prisma.person.create({
@@ -14,8 +32,8 @@ export class PersonImpl implements PersonPort {
         });
     }
 
-    async listPerson(): Promise<PersonDomain[]> {
-        const persons = await this.prisma.person.findMany();
-        return persons.map((person) => PersonAdapter.toDomain(person));
+    async listPeople(): Promise<PersonDomain[]> {
+        const people = await this.prisma.person.findMany();
+        return people.map((person) => PersonAdapter.toDomain(person));
     }
 }

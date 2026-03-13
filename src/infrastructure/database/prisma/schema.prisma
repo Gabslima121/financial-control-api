@@ -41,7 +41,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  accounts  Account[]
+  accounts Account[]
 }
 
 model Account {
@@ -93,24 +93,37 @@ model FinancialTransaction {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
-  recurrenceGroupId     String?             @db.Uuid
-  recurrenceFrequency   RecurrenceFrequency?
-  recurrenceInterval    Int?
-  recurrenceDayOfMonth  Int?
+  recurrenceGroupId    String?              @db.Uuid
+  recurrenceFrequency  RecurrenceFrequency?
+  recurrenceInterval   Int?
+  recurrenceDayOfMonth Int?
 
   account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  bankStatementId String? @unique @db.Uuid
+  bankStatementId String?                   @unique @db.Uuid
   bankStatement   BankStatementTransaction? @relation(fields: [bankStatementId], references: [id])
 
+  @@unique([recurrenceGroupId, dueDate])
   @@index([accountId, paidAt])
   @@index([status])
   @@index([recurrenceGroupId])
-  @@unique([recurrenceGroupId, dueDate])
 }
 
 model Person {
-  id        String   @id @default(uuid()) @db.Uuid
-  name      String   @db.VarChar(255)
-  email     String   @unique @db.VarChar(255)
+  id            String         @id @default(uuid()) @db.Uuid
+  name          String         @db.VarChar(255)
+  email         String         @unique @db.VarChar(255)
+  personIncomes PersonIncome[]
+}
+
+model PersonIncome {
+  id        String              @id @default(uuid()) @db.Uuid
+  personId  String              @db.Uuid
+  amount    Decimal             @db.Decimal(15, 2)
+  frequency RecurrenceFrequency
+  createdAt DateTime            @default(now())
+
+  person Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@unique([personId])
 }
