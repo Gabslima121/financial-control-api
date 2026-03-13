@@ -1,16 +1,16 @@
-import { PersonPort } from "src/core/port/person.port";
-import { NotFoundException } from "src/shared/errors/custom.exception";
+import { PersonPort } from 'src/core/port/person.port';
+import { NotFoundException } from 'src/shared/errors/custom.exception';
 
 export class FindPersonById {
-    constructor(private readonly personPort: PersonPort) {}
-    
-    async execute(id: string) {
-        const personExists = await this.personPort.findPersonById(id);
+  constructor(private readonly personPort: PersonPort) {}
 
-        if (!personExists) {
-            throw new NotFoundException('Person not found');
-        }
+  async execute(id: string) {
+    const personExists = await this.personPort.findPersonById(id);
 
-        return personExists;
+    if (!personExists) {
+      throw new NotFoundException('Person not found');
     }
+
+    return personExists;
+  }
 }

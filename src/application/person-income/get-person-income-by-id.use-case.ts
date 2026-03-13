@@ -1,18 +1,16 @@
-import { NotFoundException } from "@nestjs/common";
-import { PersonIncomePort } from "src/core/port/person-income.port";
+import { NotFoundException } from '@nestjs/common';
+import { PersonIncomePort } from 'src/core/port/person-income.port';
 
 export class GetPersonIncomeByIdUseCase {
-    constructor(
-        private readonly personIncomePort: PersonIncomePort,
-    ) {}
+  constructor(private readonly personIncomePort: PersonIncomePort) {}
 
-    async execute(id: string) {
-        const personIncome = await this.personIncomePort.getIncomeById(id);
+  async execute(id: string) {
+    const personIncome = await this.personIncomePort.getIncomeById(id);
 
-        if (!personIncome) {
-            throw new NotFoundException('No income found');
-        }
-
-        return personIncome;
+    if (!personIncome) {
+      throw new NotFoundException('No income found');
     }
+
+    return personIncome;
+  }
 }
