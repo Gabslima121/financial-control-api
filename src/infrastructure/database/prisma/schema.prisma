@@ -31,6 +31,12 @@ enum RecurrenceFrequency {
   monthly
 }
 
+enum ExpenseSplitType {
+  proportional_income
+  fixed_percent
+  fixed_amount
+}
+
 model User {
   id        String   @id @default(uuid()) @db.Uuid
   name      String   @db.VarChar(255)
@@ -54,8 +60,9 @@ model Account {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  bankStatements BankStatementTransaction[]
-  transactions   FinancialTransaction[]
+  bankStatements    BankStatementTransaction[]
+  transactions      FinancialTransaction[]
+  expenseSplitRules ExpenseSplitRule[]
 
   @@index([userId])
 }
@@ -98,7 +105,12 @@ model FinancialTransaction {
   recurrenceInterval   Int?
   recurrenceDayOfMonth Int?
 
+  splitRuleId String? @db.Uuid
+
   account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  splitRule        ExpenseSplitRule?        @relation(fields: [splitRuleId], references: [id])
+  splitAllocations ExpenseSplitAllocation[]
 
   bankStatementId String?                   @unique @db.Uuid
   bankStatement   BankStatementTransaction? @relation(fields: [bankStatementId], references: [id])
@@ -110,10 +122,12 @@ model FinancialTransaction {
 }
 
 model Person {
-  id            String         @id @default(uuid()) @db.Uuid
-  name          String         @db.VarChar(255)
-  email         String         @unique @db.VarChar(255)
-  personIncomes PersonIncome[]
+  id                       String                    @id @default(uuid()) @db.Uuid
+  name                     String                    @db.VarChar(255)
+  email                    String                    @unique @db.VarChar(255)
+  personIncomes            PersonIncome[]
+  expenseSplitParticipants ExpenseSplitParticipant[]
+  expenseSplitAllocations  ExpenseSplitAllocation[]
 }
 
 model PersonIncome {
@@ -126,4 +140,53 @@ model PersonIncome {
   person Person @relation(fields: [personId], references: [id], onDelete: Cascade)
 
   @@unique([personId])
+}
+
+model ExpenseSplitRule {
+  id                String           @id @default(uuid()) @db.Uuid
+  accountId         String           @db.Uuid
+  name              String           @db.VarChar(255)
+  type              ExpenseSplitType
+  recurrenceGroupId String?          @db.Uuid
+  transactionId     String?          @db.Uuid
+  isActive          Boolean          @default(true)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  account      Account                   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  participants ExpenseSplitParticipant[]
+  transactions FinancialTransaction[]
+
+  @@unique([transactionId])
+  @@index([accountId])
+  @@index([recurrenceGroupId])
+}
+
+model ExpenseSplitParticipant {
+  id           String   @id @default(uuid()) @db.Uuid
+  ruleId       String   @db.Uuid
+  personId     String   @db.Uuid
+  fixedPercent Decimal? @db.Decimal(7, 6)
+  fixedAmount  Decimal? @db.Decimal(15, 2)
+  createdAt    DateTime @default(now())
+
+  rule   ExpenseSplitRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  person Person           @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@unique([ruleId, personId])
+  @@index([personId])
+}
+
+model ExpenseSplitAllocation {
+  id            String   @id @default(uuid()) @db.Uuid
+  transactionId String   @db.Uuid
+  personId      String   @db.Uuid
+  amount        Decimal  @db.Decimal(15, 2)
+  createdAt     DateTime @default(now())
+
+  transaction FinancialTransaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  person      Person               @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@unique([transactionId, personId])
+  @@index([personId])
 }
