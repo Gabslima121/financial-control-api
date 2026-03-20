@@ -13,11 +13,10 @@ export class JwtTokenValidatorRepository implements TokenValidatorPort {
     }
 
     const signPayload = this.normalizePayload(payload);
-    const options =
-      typeof signPayload === 'string' || Buffer.isBuffer(signPayload)
-        ? {}
-        : { expiresIn: '1d' };
-    return Promise.resolve(jwt.sign(signPayload, secret, options));
+    if (typeof signPayload === 'string' || Buffer.isBuffer(signPayload)) {
+      return Promise.resolve(jwt.sign(signPayload, secret));
+    }
+    return Promise.resolve(jwt.sign(signPayload, secret, { expiresIn: '1d' }));
   }
 
   validateToken(token: string): Promise<any> {
@@ -40,11 +39,12 @@ export class JwtTokenValidatorRepository implements TokenValidatorPort {
     }
 
     const signPayload = this.normalizePayload(payload);
-    const options =
-      typeof signPayload === 'string' || Buffer.isBuffer(signPayload)
-        ? {}
-        : { expiresIn: '7d' };
-    return Promise.resolve(jwt.sign(signPayload, secret + '_refresh', options));
+    if (typeof signPayload === 'string' || Buffer.isBuffer(signPayload)) {
+      return Promise.resolve(jwt.sign(signPayload, secret + '_refresh'));
+    }
+    return Promise.resolve(
+      jwt.sign(signPayload, secret + '_refresh', { expiresIn: '7d' }),
+    );
   }
 
   validateRefreshToken(token: string): Promise<any> {

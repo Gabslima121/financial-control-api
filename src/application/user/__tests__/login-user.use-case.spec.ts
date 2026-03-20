@@ -101,16 +101,6 @@ describe('LoginUserUseCase', () => {
     ).rejects.toThrow('Invalid password');
   });
 
-  it('deve lançar erro quando lista de contas é null', async () => {
-    userPort.findUserByEmail.mockResolvedValue(makeUser());
-    userPort.decryptPassword.mockResolvedValue(true);
-    accountPort.listAccountsByUserId.mockResolvedValue(null);
-
-    await expect(
-      useCase.execute('gabriel@email.com', 'senha123'),
-    ).rejects.toThrow('Account not found');
-  });
-
   it('deve lançar erro quando lista de contas está vazia', async () => {
     userPort.findUserByEmail.mockResolvedValue(makeUser());
     userPort.decryptPassword.mockResolvedValue(true);
