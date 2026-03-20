@@ -33,11 +33,16 @@ export class LoginUserUseCase {
       throw new Error('Account not found');
     }
 
-    const token = await this.tokenValidatorPort.createToken({
+    const tokenPayload = {
       id: userExists.getId(),
       accountId: accountExists[0].getId(),
-    });
+    };
 
-    return { token };
+    const [token, refreshToken] = await Promise.all([
+      this.tokenValidatorPort.createToken(tokenPayload),
+      this.tokenValidatorPort.createRefreshToken(tokenPayload),
+    ]);
+
+    return { token, refreshToken };
   }
 }

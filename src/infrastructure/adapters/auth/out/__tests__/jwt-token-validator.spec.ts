@@ -67,4 +67,50 @@ describe('JwtTokenValidatorRepository', () => {
       );
     });
   });
+
+  describe('createRefreshToken()', () => {
+    it('deve criar um refresh token JWT válido', async () => {
+      const token = await repo.createRefreshToken({ id: 'abc', accountId: 'xyz' });
+
+      expect(typeof token).toBe('string');
+      expect(token.split('.')).toHaveLength(3);
+    });
+
+    it('deve lançar UnauthorizedException quando JWT_SECRET não está configurado', () => {
+      delete process.env.JWT_SECRET;
+
+      expect(() => repo.createRefreshToken({ id: 'abc' })).toThrow(
+        'JWT secret not configured',
+      );
+    });
+  });
+
+  describe('validateRefreshToken()', () => {
+    it('deve validar e decodificar um refresh token criado pelo próprio repositório', async () => {
+      const payload = { id: 'abc', accountId: 'xyz' };
+      const token = await repo.createRefreshToken(payload);
+
+      const decoded = (await repo.validateRefreshToken(token)) as Record<
+        string,
+        string
+      >;
+
+      expect(decoded.id).toBe('abc');
+      expect(decoded.accountId).toBe('xyz');
+    });
+
+    it('deve lançar UnauthorizedException para refresh token inválido', () => {
+      expect(() => repo.validateRefreshToken('token.invalido.aqui')).toThrow(
+        'Refresh token inválido ou expirado',
+      );
+    });
+
+    it('deve lançar erro quando access token é usado como refresh token', async () => {
+      const accessToken = await repo.createToken({ id: 'abc' });
+
+      expect(() => repo.validateRefreshToken(accessToken)).toThrow(
+        'Refresh token inválido ou expirado',
+      );
+    });
+  });
 });

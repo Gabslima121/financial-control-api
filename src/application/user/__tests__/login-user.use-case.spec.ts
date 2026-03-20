@@ -29,6 +29,8 @@ const makeAccountPort = (): jest.Mocked<AccountPort> => ({
 const makeTokenPort = (): jest.Mocked<TokenValidatorPort> => ({
   validateToken: jest.fn(),
   createToken: jest.fn(),
+  createRefreshToken: jest.fn(),
+  validateRefreshToken: jest.fn(),
 });
 
 const makeUser = () =>
@@ -62,16 +64,21 @@ describe('LoginUserUseCase', () => {
     useCase = new LoginUserUseCase(userPort, tokenPort, accountPort);
   });
 
-  it('deve retornar token quando credenciais são válidas', async () => {
+  it('deve retornar token e refreshToken quando credenciais são válidas', async () => {
     userPort.findUserByEmail.mockResolvedValue(makeUser());
     userPort.decryptPassword.mockResolvedValue(true);
     accountPort.listAccountsByUserId.mockResolvedValue([makeAccount()]);
     tokenPort.createToken.mockResolvedValue('jwt_token');
+    tokenPort.createRefreshToken.mockResolvedValue('refresh_token');
 
     const result = await useCase.execute('gabriel@email.com', 'senha123');
 
-    expect(result).toEqual({ token: 'jwt_token' });
+    expect(result).toEqual({ token: 'jwt_token', refreshToken: 'refresh_token' });
     expect(tokenPort.createToken).toHaveBeenCalledWith({
+      id: USER_UUID,
+      accountId: ACCOUNT_UUID,
+    });
+    expect(tokenPort.createRefreshToken).toHaveBeenCalledWith({
       id: USER_UUID,
       accountId: ACCOUNT_UUID,
     });

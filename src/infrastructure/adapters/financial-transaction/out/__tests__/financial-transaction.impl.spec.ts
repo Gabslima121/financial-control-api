@@ -61,6 +61,7 @@ const makePrisma = () =>
       createMany: jest.fn(),
       findUnique: jest.fn(),
       findMany: jest.fn(),
+      count: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
       findFirst: jest.fn(),
@@ -167,23 +168,52 @@ describe('FinancialTransactionRepository', () => {
   });
 
   describe('listByAccountId()', () => {
-    it('deve retornar lista de FinancialTransactionDomain', async () => {
+    it('deve retornar lista paginada de FinancialTransactionDomain', async () => {
       (prisma.financialTransaction.findMany as jest.Mock).mockResolvedValue([
         prismaTransaction,
       ]);
+      (prisma.financialTransaction.count as jest.Mock).mockResolvedValue(1);
 
       const result = await repo.listByAccountId(ACCOUNT_UUID);
 
-      expect(result).toHaveLength(1);
-      expect(result[0]).toBeInstanceOf(FinancialTransactionDomain);
+      expect(result.data).toHaveLength(1);
+      expect(result.data[0]).toBeInstanceOf(FinancialTransactionDomain);
+      expect(result.meta.total).toBe(1);
+      expect(result.meta.page).toBe(1);
+      expect(result.meta.totalPages).toBe(1);
     });
 
     it('deve retornar lista vazia', async () => {
       (prisma.financialTransaction.findMany as jest.Mock).mockResolvedValue([]);
+      (prisma.financialTransaction.count as jest.Mock).mockResolvedValue(0);
 
       const result = await repo.listByAccountId(ACCOUNT_UUID);
 
-      expect(result).toHaveLength(0);
+      expect(result.data).toHaveLength(0);
+      expect(result.meta.total).toBe(0);
+    });
+
+    it('deve aplicar filtros e paginação', async () => {
+      (prisma.financialTransaction.findMany as jest.Mock).mockResolvedValue([]);
+      (prisma.financialTransaction.count as jest.Mock).mockResolvedValue(0);
+
+      await repo.listByAccountId(
+        ACCOUNT_UUID,
+        { type: TransactionType.EXPENSE, status: TransactionStatus.PENDING },
+        { page: 2, limit: 10 },
+      );
+
+      expect(prisma.financialTransaction.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          skip: 10,
+          take: 10,
+          where: expect.objectContaining({
+            accountId: ACCOUNT_UUID,
+            type: TransactionType.EXPENSE,
+            status: TransactionStatus.PENDING,
+          }),
+        }),
+      );
     });
   });
 
@@ -220,15 +250,16 @@ describe('FinancialTransactionRepository', () => {
   });
 
   describe('delete()', () => {
-    it('deve chamar prisma.financialTransaction.delete com o id correto', async () => {
-      (prisma.financialTransaction.delete as jest.Mock).mockResolvedValue(
+    it('deve fazer soft delete definindo deletedAt', async () => {
+      (prisma.financialTransaction.update as jest.Mock).mockResolvedValue(
         undefined,
       );
 
       await repo.delete(VALID_UUID);
 
-      expect(prisma.financialTransaction.delete).toHaveBeenCalledWith({
+      expect(prisma.financialTransaction.update).toHaveBeenCalledWith({
         where: { id: VALID_UUID },
+        data: { deletedAt: expect.any(Date) },
       });
     });
   });

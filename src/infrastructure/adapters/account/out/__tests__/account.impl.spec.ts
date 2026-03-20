@@ -109,7 +109,7 @@ describe('AccountRepository', () => {
       expect(result!.getBankName()).toBe('Nubank');
       expect(result!.getInitialBalance()).toBe(1000);
       expect(prisma.account.findUnique).toHaveBeenCalledWith({
-        where: { id: VALID_UUID },
+        where: { id: VALID_UUID, deletedAt: null },
         include: { user: true },
       });
     });
@@ -176,13 +176,14 @@ describe('AccountRepository', () => {
   });
 
   describe('deleteAccount()', () => {
-    it('deve chamar prisma.account.delete com o id correto', async () => {
-      (prisma.account.delete as jest.Mock).mockResolvedValue(undefined);
+    it('deve fazer soft delete definindo deletedAt', async () => {
+      (prisma.account.update as jest.Mock).mockResolvedValue(undefined);
 
       await repo.deleteAccount(VALID_UUID);
 
-      expect(prisma.account.delete).toHaveBeenCalledWith({
+      expect(prisma.account.update).toHaveBeenCalledWith({
         where: { id: VALID_UUID },
+        data: { deletedAt: expect.any(Date) },
       });
     });
   });

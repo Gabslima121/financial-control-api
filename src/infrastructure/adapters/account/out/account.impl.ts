@@ -30,7 +30,7 @@ export class AccountRepository implements AccountPort {
 
   async findById(id: string): Promise<AccountDomain | null> {
     const account = await this.prisma.account.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
       include: { user: true },
     });
 
@@ -61,7 +61,7 @@ export class AccountRepository implements AccountPort {
 
   async listAccountsByUserId(userId: string): Promise<AccountDomain[]> {
     const accounts = await this.prisma.account.findMany({
-      where: { userId },
+      where: { userId, deletedAt: null },
       include: { user: true },
     });
 
@@ -100,8 +100,9 @@ export class AccountRepository implements AccountPort {
   }
 
   async deleteAccount(id: string): Promise<void> {
-    await this.prisma.account.delete({
+    await this.prisma.account.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
   }
 }

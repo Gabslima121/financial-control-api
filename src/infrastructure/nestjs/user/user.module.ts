@@ -5,6 +5,7 @@ import { PrismaProvider } from '../utils/providers/prisma.provider';
 import { CreateUserUseCase } from 'src/application/user/create-user.use-case';
 import { UserPort } from 'src/core/port/user.port';
 import { LoginUserUseCase } from 'src/application/user/login-user.use-case';
+import { RefreshTokenUseCase } from 'src/application/user/refresh-token.use-case';
 import { TokenValidatorPort } from 'src/core/port/token-validator.port';
 import { JwtTokenValidatorRepository } from 'src/infrastructure/adapters/auth/out/jwt-token-validator.repository';
 import { AccountModule } from '../account/account.module';
@@ -34,6 +35,12 @@ import { AccountPort } from 'src/core/port/account.port';
         accountPort: AccountPort,
       ) => new LoginUserUseCase(userPort, tokenValidatorPort, accountPort),
       inject: ['UserPort', 'TokenValidatorPort', 'AccountPort'],
+    },
+    {
+      provide: RefreshTokenUseCase,
+      useFactory: (tokenValidatorPort: TokenValidatorPort) =>
+        new RefreshTokenUseCase(tokenValidatorPort),
+      inject: ['TokenValidatorPort'],
     },
   ],
   imports: [forwardRef(() => AccountModule)],
