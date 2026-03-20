@@ -40,7 +40,10 @@ describe('FinancialTransactionDomain', () => {
     });
 
     it('deve aceitar account nulo', () => {
-      const tx = FinancialTransactionDomain.create({ ...baseProps, account: null });
+      const tx = FinancialTransactionDomain.create({
+        ...baseProps,
+        account: null,
+      });
       expect(tx.getAccount()).toBeNull();
     });
 

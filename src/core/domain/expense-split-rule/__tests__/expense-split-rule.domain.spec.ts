@@ -16,7 +16,10 @@ const baseProps = {
 describe('ExpenseSplitRuleDomain', () => {
   describe('create()', () => {
     it('deve criar uma regra com id fornecido', () => {
-      const rule = ExpenseSplitRuleDomain.create({ ...baseProps, id: VALID_UUID });
+      const rule = ExpenseSplitRuleDomain.create({
+        ...baseProps,
+        id: VALID_UUID,
+      });
       expect(rule.getId()).toBe(VALID_UUID);
     });
 
@@ -33,7 +36,10 @@ describe('ExpenseSplitRuleDomain', () => {
     });
 
     it('deve aceitar isActive false', () => {
-      const rule = ExpenseSplitRuleDomain.create({ ...baseProps, isActive: false });
+      const rule = ExpenseSplitRuleDomain.create({
+        ...baseProps,
+        isActive: false,
+      });
       expect(rule.getIsActive()).toBe(false);
     });
 

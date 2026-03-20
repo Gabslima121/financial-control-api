@@ -26,7 +26,10 @@ describe('AccountDomainAdapter', () => {
     });
 
     it('deve aceitar bankName nulo', () => {
-      const domain = AccountDomainAdapter.toDomain({ ...baseDTO, bankName: null });
+      const domain = AccountDomainAdapter.toDomain({
+        ...baseDTO,
+        bankName: null,
+      });
       expect(domain.getBankName()).toBeNull();
     });
   });
@@ -47,7 +50,9 @@ describe('AccountDomainAdapter', () => {
 
   describe('round-trip', () => {
     it('deve preservar os valores em toDomain → toDTO', () => {
-      const dto = AccountDomainAdapter.toDTO(AccountDomainAdapter.toDomain(baseDTO));
+      const dto = AccountDomainAdapter.toDTO(
+        AccountDomainAdapter.toDomain(baseDTO),
+      );
 
       expect(dto.id).toBe(baseDTO.id);
       expect(dto.name).toBe(baseDTO.name);

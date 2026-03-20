@@ -47,7 +47,9 @@ describe('PersonIncomeAdapter', () => {
 
   describe('round-trip', () => {
     it('deve preservar os valores em toDomain → toDto', () => {
-      const dto = PersonIncomeAdapter.toDto(PersonIncomeAdapter.toDomain(baseDTO));
+      const dto = PersonIncomeAdapter.toDto(
+        PersonIncomeAdapter.toDomain(baseDTO),
+      );
 
       expect(dto.id).toBe(baseDTO.id);
       expect(dto.amount).toBe(baseDTO.amount);

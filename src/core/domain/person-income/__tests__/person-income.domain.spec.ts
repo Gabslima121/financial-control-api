@@ -19,7 +19,10 @@ const baseProps = {
 describe('PersonIncomeDomain', () => {
   describe('create()', () => {
     it('deve criar uma renda com id fornecido', () => {
-      const income = PersonIncomeDomain.create({ ...baseProps, id: VALID_UUID });
+      const income = PersonIncomeDomain.create({
+        ...baseProps,
+        id: VALID_UUID,
+      });
       expect(income.getId()).toBe(VALID_UUID);
     });
 
@@ -37,7 +40,10 @@ describe('PersonIncomeDomain', () => {
 
     it('deve armazenar createdAt quando fornecido', () => {
       const date = new Date('2024-01-01');
-      const income = PersonIncomeDomain.create({ ...baseProps, createdAt: date });
+      const income = PersonIncomeDomain.create({
+        ...baseProps,
+        createdAt: date,
+      });
       expect(income.getCreatedAt()).toEqual(date);
     });
   });
