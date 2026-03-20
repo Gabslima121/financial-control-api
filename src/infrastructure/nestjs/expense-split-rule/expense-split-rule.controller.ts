@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { CalculateSplitPaymentUseCase } from '../../../application/expense-split-rule/calculate-split-payment.use-case';
 import { CreateExpenseSplitRuleUseCase } from '../../../application/expense-split-rule/create-expense-split-rule.use-case';
 import { CurrentUser } from '../utils/decorators/user.decorator';
 import { AuthenticatedUser } from '../utils/types/express';
@@ -10,6 +11,7 @@ import { CreateExpenseSplitRuleDTO } from './dto/create-expense-split-rule.dto';
 export class ExpenseSplitRuleController {
   constructor(
     private readonly createExpenseSplitRuleUseCase: CreateExpenseSplitRuleUseCase,
+    private readonly calculateSplitPaymentUseCase: CalculateSplitPaymentUseCase,
   ) {}
 
   @Post()
@@ -18,5 +20,16 @@ export class ExpenseSplitRuleController {
     @Body() dto: CreateExpenseSplitRuleDTO,
   ) {
     await this.createExpenseSplitRuleUseCase.execute(dto, user.accountId);
+  }
+
+  @Get('calculate-split/:splitRuleId/transaction/:financialTransactionId')
+  async calculateSplitPayment(
+    @Param('splitRuleId') splitRuleId: string,
+    @Param('financialTransactionId') financialTransactionId: string,
+  ) {
+    return this.calculateSplitPaymentUseCase.execute(
+      splitRuleId,
+      financialTransactionId,
+    );
   }
 }
