@@ -21,23 +21,25 @@ const makeAccountPort = (): jest.Mocked<AccountPort> => ({
   deleteAccount: jest.fn(),
 });
 
-const makeBankStatementPort = (): jest.Mocked<BankStatementTransactionPort> => ({
-  create: jest.fn(),
-  findByFitId: jest.fn(),
-  listByAccountId: jest.fn(),
-  sumAmountByAccountId: jest.fn(),
-});
+const makeBankStatementPort =
+  (): jest.Mocked<BankStatementTransactionPort> => ({
+    create: jest.fn(),
+    findByFitId: jest.fn(),
+    listByAccountId: jest.fn(),
+    sumAmountByAccountId: jest.fn(),
+  });
 
-const makeFinancialTransactionPort = (): jest.Mocked<FinancialTransactionPort> => ({
-  create: jest.fn(),
-  findById: jest.fn(),
-  listByAccountId: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-  findMatchingTransaction: jest.fn(),
-  getPendingTransactionsByAccountId: jest.fn(),
-  syncRecurringTransactions: jest.fn(),
-});
+const makeFinancialTransactionPort =
+  (): jest.Mocked<FinancialTransactionPort> => ({
+    create: jest.fn(),
+    findById: jest.fn(),
+    listByAccountId: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    findMatchingTransaction: jest.fn(),
+    getPendingTransactionsByAccountId: jest.fn(),
+    syncRecurringTransactions: jest.fn(),
+  });
 
 const makeAccount = () =>
   AccountDomain.create({
@@ -152,7 +154,9 @@ describe('CreateBankStatementTransactionUseCase', () => {
       installment: 1,
       bankStatement: null,
     });
-    financialTransactionPort.findMatchingTransaction.mockResolvedValue(matchingTx);
+    financialTransactionPort.findMatchingTransaction.mockResolvedValue(
+      matchingTx,
+    );
     financialTransactionPort.update.mockResolvedValue(undefined);
 
     const file = makeOfxBuffer([

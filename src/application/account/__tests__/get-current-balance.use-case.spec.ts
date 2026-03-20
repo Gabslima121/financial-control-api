@@ -13,12 +13,13 @@ const makeAccountPort = (): jest.Mocked<AccountPort> => ({
   deleteAccount: jest.fn(),
 });
 
-const makeBankStatementPort = (): jest.Mocked<BankStatementTransactionPort> => ({
-  create: jest.fn(),
-  findByFitId: jest.fn(),
-  listByAccountId: jest.fn(),
-  sumAmountByAccountId: jest.fn(),
-});
+const makeBankStatementPort =
+  (): jest.Mocked<BankStatementTransactionPort> => ({
+    create: jest.fn(),
+    findByFitId: jest.fn(),
+    listByAccountId: jest.fn(),
+    sumAmountByAccountId: jest.fn(),
+  });
 
 const makeAccount = (initialBalance = 1000) =>
   AccountDomain.create({ name: 'Conta', bankName: null, initialBalance });
@@ -55,6 +56,8 @@ describe('GetCurrentBalanceUseCase', () => {
   it('deve lançar erro quando conta não é encontrada', async () => {
     accountPort.findById.mockResolvedValue(null);
 
-    await expect(useCase.execute(ACCOUNT_UUID)).rejects.toThrow('Account not found');
+    await expect(useCase.execute(ACCOUNT_UUID)).rejects.toThrow(
+      'Account not found',
+    );
   });
 });

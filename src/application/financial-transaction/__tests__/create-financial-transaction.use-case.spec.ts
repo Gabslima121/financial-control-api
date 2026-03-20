@@ -20,16 +20,17 @@ const makeAccountPort = (): jest.Mocked<AccountPort> => ({
   deleteAccount: jest.fn(),
 });
 
-const makeFinancialTransactionPort = (): jest.Mocked<FinancialTransactionPort> => ({
-  create: jest.fn(),
-  findById: jest.fn(),
-  listByAccountId: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-  findMatchingTransaction: jest.fn(),
-  getPendingTransactionsByAccountId: jest.fn(),
-  syncRecurringTransactions: jest.fn(),
-});
+const makeFinancialTransactionPort =
+  (): jest.Mocked<FinancialTransactionPort> => ({
+    create: jest.fn(),
+    findById: jest.fn(),
+    listByAccountId: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    findMatchingTransaction: jest.fn(),
+    getPendingTransactionsByAccountId: jest.fn(),
+    syncRecurringTransactions: jest.fn(),
+  });
 
 const makeAccount = () =>
   AccountDomain.create({
@@ -78,9 +79,9 @@ describe('CreateFinancialTransactionUseCase', () => {
     it('deve lançar erro quando conta não existe', async () => {
       accountPort.findById.mockResolvedValue(null);
 
-      await expect(useCase.execute(makeSimpleDTO(), ACCOUNT_UUID)).rejects.toThrow(
-        'Account not found',
-      );
+      await expect(
+        useCase.execute(makeSimpleDTO(), ACCOUNT_UUID),
+      ).rejects.toThrow('Account not found');
 
       expect(financialTransactionPort.create).not.toHaveBeenCalled();
     });

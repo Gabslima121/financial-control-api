@@ -13,16 +13,17 @@ import { BankStatementTransactionPort } from 'src/core/port/bank-statement-trans
 
 const ACCOUNT_UUID = 'b2c3d4e5-f6a7-4890-9bcd-ef1234567890';
 
-const makeFinancialTransactionPort = (): jest.Mocked<FinancialTransactionPort> => ({
-  create: jest.fn(),
-  findById: jest.fn(),
-  listByAccountId: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-  findMatchingTransaction: jest.fn(),
-  getPendingTransactionsByAccountId: jest.fn(),
-  syncRecurringTransactions: jest.fn(),
-});
+const makeFinancialTransactionPort =
+  (): jest.Mocked<FinancialTransactionPort> => ({
+    create: jest.fn(),
+    findById: jest.fn(),
+    listByAccountId: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    findMatchingTransaction: jest.fn(),
+    getPendingTransactionsByAccountId: jest.fn(),
+    syncRecurringTransactions: jest.fn(),
+  });
 
 const makeAccountPort = (): jest.Mocked<AccountPort> => ({
   findById: jest.fn(),
@@ -32,15 +33,20 @@ const makeAccountPort = (): jest.Mocked<AccountPort> => ({
   deleteAccount: jest.fn(),
 });
 
-const makeBankStatementPort = (): jest.Mocked<BankStatementTransactionPort> => ({
-  create: jest.fn(),
-  findByFitId: jest.fn(),
-  listByAccountId: jest.fn(),
-  sumAmountByAccountId: jest.fn(),
-});
+const makeBankStatementPort =
+  (): jest.Mocked<BankStatementTransactionPort> => ({
+    create: jest.fn(),
+    findByFitId: jest.fn(),
+    listByAccountId: jest.fn(),
+    sumAmountByAccountId: jest.fn(),
+  });
 
 const makePendingTransaction = (amount: number, dueDate: Date) => {
-  const account = AccountDomain.create({ name: 'Conta', bankName: null, initialBalance: 0 });
+  const account = AccountDomain.create({
+    name: 'Conta',
+    bankName: null,
+    initialBalance: 0,
+  });
   const tx = FinancialTransactionDomain.create({
     account,
     type: TransactionType.EXPENSE,
@@ -91,11 +97,7 @@ describe('ProjectBalanceWithPendingTransactionsUseCase', () => {
     );
 
     const now = new Date();
-    const dueDateThisMonth = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      15,
-    );
+    const dueDateThisMonth = new Date(now.getFullYear(), now.getMonth(), 15);
     const pendingTx = makePendingTransaction(1000, dueDateThisMonth);
     financialTransactionPort.getPendingTransactionsByAccountId.mockResolvedValue(
       [pendingTx],

@@ -25,7 +25,12 @@ const makeExpenseSplitRulePort = (): jest.Mocked<ExpenseSplitRulePort> => ({
 });
 
 const makeAccount = () =>
-  AccountDomain.create({ id: ACCOUNT_UUID, name: 'Conta', bankName: null, initialBalance: 0 });
+  AccountDomain.create({
+    id: ACCOUNT_UUID,
+    name: 'Conta',
+    bankName: null,
+    initialBalance: 0,
+  });
 
 const makeRule = () =>
   ExpenseSplitRuleDomain.create({
@@ -60,7 +65,9 @@ describe('ListExpenseSplitRulesByAccountIdUseCase', () => {
     const result = await useCase.execute(ACCOUNT_UUID);
 
     expect(result).toHaveLength(1);
-    expect(expenseSplitRulePort.listByAccountId).toHaveBeenCalledWith(ACCOUNT_UUID);
+    expect(expenseSplitRulePort.listByAccountId).toHaveBeenCalledWith(
+      ACCOUNT_UUID,
+    );
   });
 
   it('deve lançar NotFoundException quando conta não existe', async () => {

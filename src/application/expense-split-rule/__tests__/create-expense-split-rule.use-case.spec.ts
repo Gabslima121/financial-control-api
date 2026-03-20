@@ -34,7 +34,12 @@ const makePersonPort = (): jest.Mocked<PersonPort> => ({
 });
 
 const makeAccount = () =>
-  AccountDomain.create({ id: ACCOUNT_UUID, name: 'Conta', bankName: null, initialBalance: 0 });
+  AccountDomain.create({
+    id: ACCOUNT_UUID,
+    name: 'Conta',
+    bankName: null,
+    initialBalance: 0,
+  });
 
 const makePerson = (id: string, name: string) =>
   PersonDomain.create({ id, name, email: `${name.toLowerCase()}@email.com` });
@@ -42,10 +47,7 @@ const makePerson = (id: string, name: string) =>
 const makeProportionalDTO = (): CreateExpenseSplitRuleDTO => ({
   name: 'Regra Aluguel',
   type: ExpenseSplitType.PROPORTIONAL_INCOME,
-  participants: [
-    { personId: PERSON_UUID_1 },
-    { personId: PERSON_UUID_2 },
-  ],
+  participants: [{ personId: PERSON_UUID_1 }, { personId: PERSON_UUID_2 }],
 });
 
 describe('CreateExpenseSplitRuleUseCase', () => {
@@ -89,7 +91,9 @@ describe('CreateExpenseSplitRuleUseCase', () => {
 
   it('deve lançar erro quando há menos de 2 participantes', async () => {
     accountPort.findById.mockResolvedValue(makeAccount());
-    personPort.findPersonById.mockResolvedValue(makePerson(PERSON_UUID_1, 'Gabriel'));
+    personPort.findPersonById.mockResolvedValue(
+      makePerson(PERSON_UUID_1, 'Gabriel'),
+    );
 
     const dto: CreateExpenseSplitRuleDTO = {
       name: 'Regra',
@@ -131,10 +135,7 @@ describe('CreateExpenseSplitRuleUseCase', () => {
     const dto: CreateExpenseSplitRuleDTO = {
       name: 'Regra Valor',
       type: ExpenseSplitType.FIXED_AMOUNT,
-      participants: [
-        { personId: PERSON_UUID_1 },
-        { personId: PERSON_UUID_2 },
-      ],
+      participants: [{ personId: PERSON_UUID_1 }, { personId: PERSON_UUID_2 }],
     };
 
     await expect(useCase.execute(dto, ACCOUNT_UUID)).rejects.toThrow(

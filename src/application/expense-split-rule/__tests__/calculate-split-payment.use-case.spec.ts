@@ -24,16 +24,17 @@ const ACCOUNT_UUID = 'c3d4e5f6-a7b8-4901-acde-f12345678901';
 const PERSON_UUID_1 = 'd4e5f6a7-b8c9-4012-bdef-012345678902';
 const PERSON_UUID_2 = 'e5f6a7b8-c9d0-4123-8ef0-123456789012';
 
-const makeFinancialTransactionPort = (): jest.Mocked<FinancialTransactionPort> => ({
-  create: jest.fn(),
-  findById: jest.fn(),
-  listByAccountId: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-  findMatchingTransaction: jest.fn(),
-  getPendingTransactionsByAccountId: jest.fn(),
-  syncRecurringTransactions: jest.fn(),
-});
+const makeFinancialTransactionPort =
+  (): jest.Mocked<FinancialTransactionPort> => ({
+    create: jest.fn(),
+    findById: jest.fn(),
+    listByAccountId: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    findMatchingTransaction: jest.fn(),
+    getPendingTransactionsByAccountId: jest.fn(),
+    syncRecurringTransactions: jest.fn(),
+  });
 
 const makeExpenseSplitRulePort = (): jest.Mocked<ExpenseSplitRulePort> => ({
   create: jest.fn(),
@@ -58,7 +59,12 @@ const makePersonPort = (): jest.Mocked<PersonPort> => ({
 const makeTransaction = (amount = 3000) =>
   FinancialTransactionDomain.create({
     id: TX_UUID,
-    account: AccountDomain.create({ id: ACCOUNT_UUID, name: 'Conta', bankName: null, initialBalance: 0 }),
+    account: AccountDomain.create({
+      id: ACCOUNT_UUID,
+      name: 'Conta',
+      bankName: null,
+      initialBalance: 0,
+    }),
     type: TransactionType.EXPENSE,
     status: TransactionStatus.PENDING,
     amount,
@@ -80,11 +86,19 @@ const makeProportionalRule = () =>
     participants: [
       {
         personId: PERSON_UUID_1,
-        person: PersonDomain.create({ id: PERSON_UUID_1, name: 'Gabriel', email: 'g@email.com' }),
+        person: PersonDomain.create({
+          id: PERSON_UUID_1,
+          name: 'Gabriel',
+          email: 'g@email.com',
+        }),
       },
       {
         personId: PERSON_UUID_2,
-        person: PersonDomain.create({ id: PERSON_UUID_2, name: 'Ana', email: 'a@email.com' }),
+        person: PersonDomain.create({
+          id: PERSON_UUID_2,
+          name: 'Ana',
+          email: 'a@email.com',
+        }),
       },
     ],
     recurrenceGroupId: null,
@@ -101,12 +115,20 @@ const makeFixedPercentRule = () =>
     participants: [
       {
         personId: PERSON_UUID_1,
-        person: PersonDomain.create({ id: PERSON_UUID_1, name: 'Gabriel', email: 'g@email.com' }),
+        person: PersonDomain.create({
+          id: PERSON_UUID_1,
+          name: 'Gabriel',
+          email: 'g@email.com',
+        }),
         fixedPercent: 0.6,
       },
       {
         personId: PERSON_UUID_2,
-        person: PersonDomain.create({ id: PERSON_UUID_2, name: 'Ana', email: 'a@email.com' }),
+        person: PersonDomain.create({
+          id: PERSON_UUID_2,
+          name: 'Ana',
+          email: 'a@email.com',
+        }),
         fixedPercent: 0.4,
       },
     ],
@@ -124,12 +146,20 @@ const makeFixedAmountRule = () =>
     participants: [
       {
         personId: PERSON_UUID_1,
-        person: PersonDomain.create({ id: PERSON_UUID_1, name: 'Gabriel', email: 'g@email.com' }),
+        person: PersonDomain.create({
+          id: PERSON_UUID_1,
+          name: 'Gabriel',
+          email: 'g@email.com',
+        }),
         fixedAmount: 2000,
       },
       {
         personId: PERSON_UUID_2,
-        person: PersonDomain.create({ id: PERSON_UUID_2, name: 'Ana', email: 'a@email.com' }),
+        person: PersonDomain.create({
+          id: PERSON_UUID_2,
+          name: 'Ana',
+          email: 'a@email.com',
+        }),
         fixedAmount: 1000,
       },
     ],
@@ -193,15 +223,25 @@ describe('CalculateSplitPaymentUseCase', () => {
 
   describe('PROPORTIONAL_INCOME', () => {
     it('deve calcular split proporcional pelo salário', async () => {
-      financialTransactionPort.findById.mockResolvedValue(makeTransaction(3000));
+      financialTransactionPort.findById.mockResolvedValue(
+        makeTransaction(3000),
+      );
       expenseSplitRulePort.findById.mockResolvedValue(makeProportionalRule());
 
       personPort.findPersonById
         .mockResolvedValueOnce(
-          PersonDomain.create({ id: PERSON_UUID_1, name: 'Gabriel', email: 'g@email.com' }),
+          PersonDomain.create({
+            id: PERSON_UUID_1,
+            name: 'Gabriel',
+            email: 'g@email.com',
+          }),
         )
         .mockResolvedValueOnce(
-          PersonDomain.create({ id: PERSON_UUID_2, name: 'Ana', email: 'a@email.com' }),
+          PersonDomain.create({
+            id: PERSON_UUID_2,
+            name: 'Ana',
+            email: 'a@email.com',
+          }),
         );
 
       personIncomePort.getIncomeByPersonId
@@ -220,7 +260,9 @@ describe('CalculateSplitPaymentUseCase', () => {
 
   describe('FIXED_PERCENT', () => {
     it('deve calcular split por percentual fixo', async () => {
-      financialTransactionPort.findById.mockResolvedValue(makeTransaction(3000));
+      financialTransactionPort.findById.mockResolvedValue(
+        makeTransaction(3000),
+      );
       expenseSplitRulePort.findById.mockResolvedValue(makeFixedPercentRule());
 
       const result = await useCase.execute(RULE_UUID, TX_UUID);
@@ -233,7 +275,9 @@ describe('CalculateSplitPaymentUseCase', () => {
 
   describe('FIXED_AMOUNT', () => {
     it('deve calcular split por valor fixo', async () => {
-      financialTransactionPort.findById.mockResolvedValue(makeTransaction(3000));
+      financialTransactionPort.findById.mockResolvedValue(
+        makeTransaction(3000),
+      );
       expenseSplitRulePort.findById.mockResolvedValue(makeFixedAmountRule());
 
       const result = await useCase.execute(RULE_UUID, TX_UUID);

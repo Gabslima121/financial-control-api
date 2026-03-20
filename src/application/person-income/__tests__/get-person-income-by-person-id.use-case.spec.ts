@@ -22,7 +22,11 @@ const makePersonPort = (): jest.Mocked<PersonPort> => ({
 });
 
 const makePerson = () =>
-  PersonDomain.create({ id: PERSON_UUID, name: 'Gabriel', email: 'g@email.com' });
+  PersonDomain.create({
+    id: PERSON_UUID,
+    name: 'Gabriel',
+    email: 'g@email.com',
+  });
 
 const makePersonIncome = () =>
   PersonIncomeDomain.create({
@@ -43,7 +47,10 @@ describe('GetPersonIncomeByPersonIdUseCase', () => {
     personIncomePort = makePersonIncomePort();
     personPort = makePersonPort();
     findPersonById = new FindPersonById(personPort);
-    useCase = new GetPersonIncomeByPersonIdUseCase(personIncomePort, findPersonById);
+    useCase = new GetPersonIncomeByPersonIdUseCase(
+      personIncomePort,
+      findPersonById,
+    );
   });
 
   it('deve retornar PersonIncomeDomain quando encontrado', async () => {
@@ -54,13 +61,17 @@ describe('GetPersonIncomeByPersonIdUseCase', () => {
 
     expect(result).toBeInstanceOf(PersonIncomeDomain);
     expect(result.getAmount()).toBe(5000);
-    expect(personIncomePort.getIncomeByPersonId).toHaveBeenCalledWith(PERSON_UUID);
+    expect(personIncomePort.getIncomeByPersonId).toHaveBeenCalledWith(
+      PERSON_UUID,
+    );
   });
 
   it('deve lançar erro quando pessoa não existe', async () => {
     personPort.findPersonById.mockResolvedValue(null);
 
-    await expect(useCase.execute(PERSON_UUID)).rejects.toThrow('Person not found');
+    await expect(useCase.execute(PERSON_UUID)).rejects.toThrow(
+      'Person not found',
+    );
   });
 
   it('deve lançar erro quando renda não existe para pessoa', async () => {

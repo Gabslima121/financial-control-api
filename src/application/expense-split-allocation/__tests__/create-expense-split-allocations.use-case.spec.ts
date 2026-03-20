@@ -6,10 +6,11 @@ const TX_UUID = 'a1b2c3d4-e5f6-4789-8abc-def012345678';
 const PERSON_UUID_1 = 'b2c3d4e5-f6a7-4890-9bcd-ef1234567890';
 const PERSON_UUID_2 = 'c3d4e5f6-a7b8-4901-acde-f12345678901';
 
-const makeExpenseSplitAllocationPort = (): jest.Mocked<ExpenseSplitAllocationPort> => ({
-  createMany: jest.fn(),
-  listByTransactionId: jest.fn(),
-});
+const makeExpenseSplitAllocationPort =
+  (): jest.Mocked<ExpenseSplitAllocationPort> => ({
+    createMany: jest.fn(),
+    listByTransactionId: jest.fn(),
+  });
 
 describe('CreateExpenseSplitAllocationsUseCase', () => {
   let expenseSplitAllocationPort: jest.Mocked<ExpenseSplitAllocationPort>;
@@ -17,7 +18,9 @@ describe('CreateExpenseSplitAllocationsUseCase', () => {
 
   beforeEach(() => {
     expenseSplitAllocationPort = makeExpenseSplitAllocationPort();
-    useCase = new CreateExpenseSplitAllocationsUseCase(expenseSplitAllocationPort);
+    useCase = new CreateExpenseSplitAllocationsUseCase(
+      expenseSplitAllocationPort,
+    );
   });
 
   it('deve criar alocações para cada participante', async () => {

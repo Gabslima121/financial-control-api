@@ -39,6 +39,8 @@ describe('FindPersonById', () => {
   it('deve lançar NotFoundException quando não encontrado', async () => {
     personPort.findPersonById.mockResolvedValue(null);
 
-    await expect(useCase.execute(PERSON_UUID)).rejects.toThrow('Person not found');
+    await expect(useCase.execute(PERSON_UUID)).rejects.toThrow(
+      'Person not found',
+    );
   });
 });

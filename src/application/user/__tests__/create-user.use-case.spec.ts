@@ -66,7 +66,7 @@ describe('CreateUserUseCase', () => {
 
     await useCase.execute(makeCreateUserDTO());
 
-    const createdUser = userPort.createUser.mock.calls[0][0] as UserDomain;
+    const createdUser = userPort.createUser.mock.calls[0][0];
     expect(createdUser.getPassword()).toBe('super_hashed');
   });
 });

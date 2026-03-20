@@ -16,7 +16,11 @@ const makePersonIncomePort = (): jest.Mocked<PersonIncomePort> => ({
 const makePersonIncome = () =>
   PersonIncomeDomain.create({
     id: INCOME_UUID,
-    person: PersonDomain.create({ id: PERSON_UUID, name: 'Gabriel', email: 'g@email.com' }),
+    person: PersonDomain.create({
+      id: PERSON_UUID,
+      name: 'Gabriel',
+      email: 'g@email.com',
+    }),
     amount: 5000,
     frequency: RecurrenceFrequency.MONTHLY,
     createdAt: new Date('2024-01-01'),
@@ -44,6 +48,8 @@ describe('GetPersonIncomeByIdUseCase', () => {
   it('deve lançar NotFoundException quando não encontrado', async () => {
     personIncomePort.getIncomeById.mockResolvedValue(null);
 
-    await expect(useCase.execute(INCOME_UUID)).rejects.toThrow('No income found');
+    await expect(useCase.execute(INCOME_UUID)).rejects.toThrow(
+      'No income found',
+    );
   });
 });

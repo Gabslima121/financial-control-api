@@ -6,10 +6,11 @@ const TX_UUID = 'a1b2c3d4-e5f6-4789-8abc-def012345678';
 const PERSON_UUID = 'b2c3d4e5-f6a7-4890-9bcd-ef1234567890';
 const ALLOC_UUID = 'c3d4e5f6-a7b8-4901-acde-f12345678901';
 
-const makeExpenseSplitAllocationPort = (): jest.Mocked<ExpenseSplitAllocationPort> => ({
-  createMany: jest.fn(),
-  listByTransactionId: jest.fn(),
-});
+const makeExpenseSplitAllocationPort =
+  (): jest.Mocked<ExpenseSplitAllocationPort> => ({
+    createMany: jest.fn(),
+    listByTransactionId: jest.fn(),
+  });
 
 const makeAllocation = () =>
   ExpenseSplitAllocationDomain.create({
@@ -41,7 +42,9 @@ describe('ListExpenseSplitAllocationsByTransactionIdUseCase', () => {
     expect(result).toHaveLength(1);
     expect(result[0]).toBeInstanceOf(ExpenseSplitAllocationDomain);
     expect(result[0].getAmount()).toBe(1500);
-    expect(expenseSplitAllocationPort.listByTransactionId).toHaveBeenCalledWith(TX_UUID);
+    expect(expenseSplitAllocationPort.listByTransactionId).toHaveBeenCalledWith(
+      TX_UUID,
+    );
   });
 
   it('deve retornar lista vazia quando não há alocações', async () => {
