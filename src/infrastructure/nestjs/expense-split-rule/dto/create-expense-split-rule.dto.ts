@@ -37,11 +37,6 @@ export class CreateExpenseSplitRuleDTO {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  accountId: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
   name: string;
 
   @ApiProperty({ enum: ExpenseSplitType })

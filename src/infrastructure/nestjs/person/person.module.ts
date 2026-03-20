@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
+import { CreatePersonUseCase } from 'src/application/person/create-person.use-case';
+import { FindPersonById } from 'src/application/person/find-person-by-id.use-case';
+import { PersonPort } from 'src/core/port/person.port';
 import { PersonImpl } from 'src/infrastructure/adapters/person/out/person.impl';
 import { PrismaProvider } from '../utils/providers/prisma.provider';
-import { CreatePersonUseCase } from 'src/application/person/create-person.use-case';
-import { PersonPort } from 'src/core/port/person.port';
 import { PersonController } from './person.controller';
-import { FindPersonById } from 'src/application/person/find-person-by-id.use-case';
 
 @Module({
   providers: [
@@ -26,6 +26,6 @@ import { FindPersonById } from 'src/application/person/find-person-by-id.use-cas
     },
   ],
   controllers: [PersonController],
-  exports: [FindPersonById],
+  exports: [FindPersonById, 'PersonPort'],
 })
 export class PersonModule {}

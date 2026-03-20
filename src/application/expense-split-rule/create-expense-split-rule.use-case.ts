@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AccountPort } from 'src/core/port/account.port';
-import { PersonPort } from 'src/core/port/person.port';
-import { ExpenseSplitRulePort } from 'src/core/port/expense-split-rule.port';
 import { ExpenseSplitType } from 'src/core/domain/expense-split-rule/dto';
+import { AccountPort } from 'src/core/port/account.port';
+import { ExpenseSplitRulePort } from 'src/core/port/expense-split-rule.port';
+import { PersonPort } from 'src/core/port/person.port';
 import { ExpenseSplitRuleAdapter } from 'src/infrastructure/adapters/expense-split-rule/in/expense-split-rule.adapter';
 import { CreateExpenseSplitRuleDTO } from 'src/infrastructure/nestjs/expense-split-rule/dto/create-expense-split-rule.dto';
 
@@ -14,8 +14,9 @@ export class CreateExpenseSplitRuleUseCase {
     private readonly personPort: PersonPort,
   ) {}
 
-  async execute(dto: CreateExpenseSplitRuleDTO) {
-    const account = await this.accountPort.findById(dto.accountId);
+  async execute(dto: CreateExpenseSplitRuleDTO, accountId: string) {
+    const account = await this.accountPort.findById(accountId);
+
     if (!account) {
       throw new NotFoundException('Conta não encontrada.');
     }
@@ -35,7 +36,7 @@ export class CreateExpenseSplitRuleUseCase {
     this.validateRule(dto.type, participants);
 
     const domain = ExpenseSplitRuleAdapter.toDomain({
-      accountId: dto.accountId,
+      accountId,
       name: dto.name,
       type: dto.type,
       recurrenceGroupId: dto.recurrenceGroupId ?? null,
@@ -49,7 +50,10 @@ export class CreateExpenseSplitRuleUseCase {
 
   private validateRule(
     type: ExpenseSplitType,
-    participants: Array<{ fixedPercent: number | null; fixedAmount: number | null }>,
+    participants: Array<{
+      fixedPercent: number | null;
+      fixedAmount: number | null;
+    }>,
   ) {
     if (participants.length < 2) {
       throw new Error('A regra precisa ter pelo menos 2 participantes');
@@ -69,9 +73,10 @@ export class CreateExpenseSplitRuleUseCase {
     if (type === ExpenseSplitType.FIXED_AMOUNT) {
       const hasAny = participants.some((p) => p.fixedAmount !== null);
       if (!hasAny) {
-        throw new Error('fixedAmount é obrigatório para split do tipo fixed_amount');
+        throw new Error(
+          'fixedAmount é obrigatório para split do tipo fixed_amount',
+        );
       }
     }
   }
 }
-
