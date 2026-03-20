@@ -21,7 +21,7 @@ export class CreateAccountUseCase {
     const accoutDomain = AccountDomainAdapter.toDomain({
       bankName: createAccountDto.bankName,
       name: createAccountDto.name,
-      initialBalance: createAccountDto.initalBalance,
+      initialBalance: createAccountDto.initialBalance,
       user: userExists,
     });
 

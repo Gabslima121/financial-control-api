@@ -38,7 +38,7 @@ const makeUser = () =>
 const makeCreateAccountDTO = (): CreateAccountDTO => ({
   name: 'Conta Principal',
   bankName: 'Nubank',
-  initalBalance: 1000,
+  initialBalance: 1000,
 });
 
 describe('CreateAccountUseCase', () => {

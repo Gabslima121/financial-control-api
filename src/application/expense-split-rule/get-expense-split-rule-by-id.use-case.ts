@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { NotFoundException } from 'src/shared/errors/custom.exception';
 import { ExpenseSplitRulePort } from 'src/core/port/expense-split-rule.port';
 
 @Injectable()

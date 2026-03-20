@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException } from 'src/shared/errors/custom.exception';
 import { PersonIncomePort } from 'src/core/port/person-income.port';
 
 export class GetPersonIncomeByIdUseCase {

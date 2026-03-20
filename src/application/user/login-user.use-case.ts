@@ -29,7 +29,7 @@ export class LoginUserUseCase {
       userExists.getId(),
     );
 
-    if (!accountExists) {
+    if (!accountExists || accountExists.length === 0) {
       throw new Error('Account not found');
     }
 

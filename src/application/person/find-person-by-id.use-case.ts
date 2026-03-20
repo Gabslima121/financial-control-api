@@ -1,6 +1,8 @@
+import { Injectable } from '@nestjs/common';
 import { PersonPort } from 'src/core/port/person.port';
 import { NotFoundException } from 'src/shared/errors/custom.exception';
 
+@Injectable()
 export class FindPersonById {
   constructor(private readonly personPort: PersonPort) {}
 

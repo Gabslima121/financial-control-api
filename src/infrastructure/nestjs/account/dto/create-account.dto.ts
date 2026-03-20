@@ -15,5 +15,5 @@ export class CreateAccountDTO {
   @ApiProperty({ description: 'Initial balance' })
   @IsNumber({}, { message: 'Initial balance must be a number' })
   @IsNotEmpty({ message: 'Initial balance is required' })
-  initalBalance: number;
+  initialBalance: number;
 }

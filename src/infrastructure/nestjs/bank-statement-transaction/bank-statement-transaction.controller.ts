@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Controller,
   Param,
+  ParseUUIDPipe,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -33,7 +34,7 @@ export class BankStatementTransactionController {
   })
   async create(
     @UploadedFile() file: Express.Multer.File,
-    @Param('accountId') accountId: string,
+    @Param('accountId', ParseUUIDPipe) accountId: string,
   ) {
     if (!file) {
       throw new BadRequestException('Arquivo não enviado');
