@@ -18,4 +18,3 @@ export class ListExpenseSplitRulesByAccountIdUseCase {
     return this.expenseSplitRulePort.listByAccountId(accountId);
   }
 }
-

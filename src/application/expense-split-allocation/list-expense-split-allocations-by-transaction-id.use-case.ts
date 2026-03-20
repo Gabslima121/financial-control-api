@@ -11,4 +11,3 @@ export class ListExpenseSplitAllocationsByTransactionIdUseCase {
     return this.expenseSplitAllocationPort.listByTransactionId(transactionId);
   }
 }
-

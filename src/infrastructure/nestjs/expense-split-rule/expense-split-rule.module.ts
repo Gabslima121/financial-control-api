@@ -15,7 +15,12 @@ import { ExpenseSplitRuleController } from './expense-split-rule.controller';
 import { GetPersonIncomeByPersonIdUseCase } from '../../../application/person-income/get-person-income-by-person-id.use-case';
 
 @Module({
-  imports: [AccountModule, PersonModule, FinancialTransactionModule, PersonIncomeModule],
+  imports: [
+    AccountModule,
+    PersonModule,
+    FinancialTransactionModule,
+    PersonIncomeModule,
+  ],
   controllers: [ExpenseSplitRuleController],
   providers: [
     PrismaProvider,

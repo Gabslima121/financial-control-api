@@ -14,4 +14,3 @@ export class GetExpenseSplitRuleByIdUseCase {
     return rule;
   }
 }
-

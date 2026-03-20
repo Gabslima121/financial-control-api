@@ -23,4 +23,3 @@ export class CreateExpenseSplitAllocationsUseCase {
     await this.expenseSplitAllocationPort.createMany(domains);
   }
 }
-
