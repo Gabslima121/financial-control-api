@@ -45,7 +45,7 @@ export class ProjectBalanceWithPendingTransactionsUseCase {
       0,
     );
 
-    const projectedBalance = currentBalance - pendingTransactionsSum;
+    const projectedBalance = Number(currentBalance) - pendingTransactionsSum;
 
     return Math.round(projectedBalance * 100) / 100;
   }

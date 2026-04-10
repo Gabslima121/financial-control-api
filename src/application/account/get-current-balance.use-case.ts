@@ -22,6 +22,6 @@ export class GetCurrentBalanceUseCase {
     const total =
       Number(account.getInitialBalance() ?? 0) + Number(balance ?? 0);
 
-    return total;
+    return total.toFixed(2);
   }
 }

@@ -25,10 +25,25 @@ export class ListFinancialTransactionsUseCase {
       throw new NotFoundException('Account not found');
     }
 
-    return this.financialTransactionPort.listByAccountId(
+    const transactions = await this.financialTransactionPort.listByAccountId(
       accountId,
       filters,
       pagination,
     );
+
+    const mappedTransactions = transactions.data.map((transaction) => ({
+      id: transaction.getId(),
+      type: transaction.getType(),
+      amount: transaction.getAmount(),
+      description: transaction.getDescription(),
+      method: transaction.getPaymentMethod(),
+      status: transaction.getStatus(),
+      createdAt: transaction.getCreatedAt(),
+      dueDate: transaction.getDueDate(),
+      paidAt: transaction.getPaidAt(),
+      installments: transaction.getInstallments(),
+    }));
+
+    return mappedTransactions;
   }
 }
