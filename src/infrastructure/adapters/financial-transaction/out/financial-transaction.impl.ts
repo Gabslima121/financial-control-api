@@ -1,28 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import {
-  PrismaClient,
-  RecurrenceFrequency as PrismaRecurrenceFrequency,
-  TransactionType as PrismaTransactionType,
-  TransactionStatus as PrismaTransactionStatus,
-  PaymentMethod as PrismaPaymentMethod,
-  FinancialTransaction as PrismaFinancialTransaction,
   Account as PrismaAccount,
   BankStatementTransaction as PrismaBankStatement,
+  PrismaClient,
+  FinancialTransaction as PrismaFinancialTransaction,
+  PaymentMethod as PrismaPaymentMethod,
+  RecurrenceFrequency as PrismaRecurrenceFrequency,
+  TransactionStatus as PrismaTransactionStatus,
+  TransactionType as PrismaTransactionType,
   User as PrismaUser,
 } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { FinancialTransactionDomain } from 'src/core/domain/financial-transaction/financial-transaction.domain';
-import {
-  FinancialTransactionPort,
-  TransactionFilters,
-} from 'src/core/port/financial-transaction.port';
-import { FinancialTransactionAdapter } from '../in/financial-transaction.adapter';
 import {
   PaymentMethod,
   RecurrenceFrequency,
   TransactionStatus,
   TransactionType,
 } from 'src/core/domain/financial-transaction/dto';
+import { FinancialTransactionDomain } from 'src/core/domain/financial-transaction/financial-transaction.domain';
+import {
+  FinancialTransactionPort,
+  TransactionFilters,
+} from 'src/core/port/financial-transaction.port';
 import { AccountDomainAdapter } from 'src/infrastructure/adapters/account/in/account.adapter';
 import { BankStatementTransactionAdapter } from 'src/infrastructure/adapters/bank-statement-transaction/in/bank-statement-transaction.adapter';
 import { UserDomainAdapter } from 'src/infrastructure/adapters/user/in/user.adapter';
@@ -30,6 +29,7 @@ import {
   PaginatedResult,
   PaginationParams,
 } from 'src/shared/dto/pagination.dto';
+import { FinancialTransactionAdapter } from '../in/financial-transaction.adapter';
 
 type PrismaTransactionWithRelations = PrismaFinancialTransaction & {
   account: (PrismaAccount & { user: PrismaUser | null }) | null;
@@ -112,8 +112,7 @@ export class FinancialTransactionRepository
                             name: transaction.bankStatement.account.user.name,
                             document:
                               transaction.bankStatement.account.user.document,
-                            email:
-                              transaction.bankStatement.account.user.email,
+                            email: transaction.bankStatement.account.user.email,
                             password:
                               transaction.bankStatement.account.user.password,
                             createdAt:
@@ -196,9 +195,9 @@ export class FinancialTransactionRepository
     const where = {
       accountId,
       deletedAt: null,
-      ...(filters?.type && { type: filters.type as PrismaTransactionType }),
+      ...(filters?.type && { type: filters.type.toLowerCase() as any }),
       ...(filters?.status && {
-        status: filters.status as PrismaTransactionStatus,
+        status: filters.status.toLowerCase() as PrismaTransactionStatus,
       }),
       ...((filters?.startDate || filters?.endDate) && {
         dueDate: {
